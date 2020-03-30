@@ -2,6 +2,7 @@
 
 
 #define DEBUG_ENABLE        //DEBUG MODE
+#define HOME                // switch to home work
 
 #ifdef DEBUG_ENABLE
 #define DEBUG(x) Serial.println(x)
@@ -9,8 +10,13 @@
 #define DEBUG(x)
 #endif
 
+#ifdef HOME
+const char* ssid = "PUTIN UTELE";
+const char* password = "0674788273";
+#else
 const char* ssid = "SUERTEKSA CNC";
 const char* password = "61347400";
+#endif
 const char* ssidAP      = "Aquarium-AP";         // Назва точки доступу
 const char* passwordAP  = "" ;                   // Пароль точки доступу
 
