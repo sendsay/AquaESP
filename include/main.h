@@ -9,8 +9,8 @@
 #define DEBUG(x)
 #endif
 
-const char* ssid = "PUTIN UTELE";
-const char* password = "0674788273";
+const char* ssid = "SUERTEKSA CNC";
+const char* password = "61347400";
 const char* ssidAP      = "Aquarium-AP";         // Назва точки доступу
 const char* passwordAP  = "" ;                   // Пароль точки доступу
 
