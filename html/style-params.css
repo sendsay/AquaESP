@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:400,700&display=swap&subset=cyrillic');
+* { margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Open Sans', sans-serif;}
+
+
+ body { /*display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    flex-wrap: wrap; */
+    background: #010615;}
+
+.header {
+    color: rgb(223, 223, 223);
+    margin-left: 20px;
+    margin-top: 10px;
+    border-bottom: solid 1px rgb(17, 201, 1);
+}
+
+.smallheader {
+    color: rgb(206, 206, 206);
+    text-shadow: 0px 0px 9px rgba(9,241,10,1);
+}
+
+.css-input {
+    padding: 5px;
+    font-size: 16px;
+    border-width: 1px;
+    border-color: #16f30d;
+    background-color: #FFFFFF;
+    color: #000000;
+    border-style: solid;
+    border-radius: 50px;
+    box-shadow: 0px 0px 11px rgba(70,250,13,.49);
+    text-shadow: 0px 0px 5px rgba(66,66,66,.75);
+}
+.css-input:focus {
+    outline:none;
+}
