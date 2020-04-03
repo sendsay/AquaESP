@@ -144,10 +144,25 @@
         </div>
         <div class="row paramrow">
             <div class="col text-right smallheader">
+                <h4>Адрес сервера :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttserver" type="text" class="css-input" pattern="[- 0-9a-zA-Z._/]{1,20}" placeholder="например: m24.cloudmqtt.com" title="Min. 1 max 20 simbols">            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Порт :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttport" type="number" class="css-input" pattern="[\d]{5}" placeholder="например: 17049" title="Only 5 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
                 <h4>Имя пользователя :</h4>
             </div>
             <div class="col text-left">
-                <input id="userName" type="text" class="css-input" title="Min. 1 Max. 20 simbols" pattern="[0-9a-zA-Z. ]{1,20}" placeholder="example: ntp3.time.in.ua">
+                <input id="mqttUserName" type="text" class="css-input" pattern="[-\w\s#@/]{0,20}" placeholder="например: zqyslfbd" title="Max. 20 simbols" >
             </div>
         </div>
         <div class="row paramrow">
@@ -155,21 +170,65 @@
                 <h4>Пароль :</h4>
             </div>
             <div class="col text-left">
-                <input id="userPass" type="text" class="css-input" title="Min. 1 Max. 20 simbols" pattern="[0-9a-zA-Z. ]{1,20}" placeholder="example: ntp3.time.in.ua">
+                <input id="mqttpass" type="text" class="css-input" pattern="[-\w\s#@/]{0,20}" placeholder="например: dK4mJd" title="Max. 20 simbols">
             </div>
         </div>
-
-
-
-
-
-
-
-
-
-
-
-
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Имя устройства :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttname" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 1 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch1" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw1" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 2 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch1" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw2" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 3 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch2" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw3" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 4 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch3" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw4" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 5 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch4" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw5" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 6 :</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttswitch5" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw6" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
     </div>
 </body>
 </html>

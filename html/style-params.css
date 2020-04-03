@@ -46,6 +46,10 @@
     margin-top: 20px;
 }
 
+.paramrow:last-child {
+    margin-bottom: 30px;
+}
+
 .header {
     font-size: 20px;
     text-transform: uppercase;
@@ -94,14 +98,18 @@
   .flipswitch-inner:before {
     content: "ДА";
     padding-left: 18px;
-    background-color: #1ae009;
+    /* background-color: #1ae009; */
+    background: linear-gradient(0deg, #0a861f, #13ff33);
+
     color: #FFFFFF;
   }
   .flipswitch-inner:after {
     content: "НЕТ";
     padding-right: 18px;
-    background-color: #fa0f0f;
-    color: #000000;
+    /* background-color: #fa0f0f; */
+    background:    linear-gradient(0deg, #810404, #f00606);
+
+    color: #fff;
     text-align: right;
   }
   .flipswitch-switch {
@@ -126,5 +134,3 @@
   .flipswitch-cb:checked + .flipswitch-label .flipswitch-switch {
     right: 0;
   }
-
-  
