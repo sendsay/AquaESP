@@ -125,7 +125,6 @@
                 <h4>Летнее время:</h4>
             </div>
             <div class="col text-left">
-
                 <div class="flipswitch">
                     <input type="checkbox" checked="" id="fs" class="flipswitch-cb" name="flipswitch">
                     <label for="fs" class="flipswitch-label">
@@ -134,15 +133,25 @@
                     </label>
                 </div>
             </div>
+        </div>
+        <!---TIME-->
 
+        <!-- MQTT -->
+        <div class="row">
+            <div class="col header text-center">
+                <h3>MQTT</h3>
+            </div>
+        </div>
+        <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Имя топика:</h4>
+            </div>
+            <div class="col text-left">
+                <input id="topicName" type="text" class="css-input" title="Min. 1 Max. 20 simbols" pattern="[0-9a-zA-Z. ]{1,20}" placeholder="example: ntp3.time.in.ua">
+            </div>
         </div>
 
 
-
-
-
-
-        <!---TIME-->
 
 
 
