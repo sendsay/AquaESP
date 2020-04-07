@@ -11,9 +11,9 @@
 
     <title>Parameters</title>
 </head>
-<body>
-    <div class="content">
+<body onload="getData()">
 
+    <div class="content">
         <!-- WIFI -->
         <div class="row">
             <div class="col header text-center">
@@ -277,6 +277,14 @@
                 <input id="mqttswitch6name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
             </div>
         </div>
+
+        <div class="row buttonPanel">
+            <div class="col text-center">
+                   <span><a href="#" class="btn">Сохранить</a></span>
+            </div>
+        </div>
     </div>
+
+    <script src="script.js"></script>
 </body>
 </html>

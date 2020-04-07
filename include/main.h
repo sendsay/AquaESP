@@ -1,4 +1,4 @@
-#include <Arduino.h>
+// #include <Arduino.h>
 
 
 #define DEBUG_ENABLE        //DEBUG MODE
@@ -41,3 +41,18 @@ byte packetBuffer[NTP_PACKET_SIZE];       // Буфер пакета време�
 int summertime = 1;                                     // летнее время
 #define LEAP_YEAR(Y) (((1970+Y)>0) && !((1970+Y)%4) && (((1970+Y)%100)||!((1970+Y)%400)))   // Високосні літа
 static const uint8_t monthDays[] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};        // Кількість днів у місяцях
+
+// Config structure
+struct Config {
+    char ssid[50];
+    char password[50];
+    char ssidAP[50];
+    char passwordAP[50];
+    float timeZone;
+    char ntpServerName[50];
+    int summerTime;
+
+};
+
+const char* fileConfigName = "/config";
+// Config structure

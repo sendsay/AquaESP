@@ -21,6 +21,7 @@ ESP8266WebServer server(80);            // web server
 IPAddress apIP(192, 168, 10, 10);       // Adress AP
 WiFiUDP ntpUDP;                         // UDP client for time
 IPAddress timeServerIP;                 // server IP adress
+Config config;                          // config structure
 
 
 /*
@@ -47,7 +48,6 @@ void printTime();                       // print time for debug
 void timeUpdateNTP();                   // update time from iNet
 void getNTPtime();                      // get time from server
 
-
 /*
 ..######..########.########.##.....##.########.
 .##....##.##..........##....##.....##.##.....##
@@ -57,7 +57,6 @@ void getNTPtime();                      // get time from server
 .##....##.##..........##....##.....##.##.......
 ..######..########....##.....#######..##.......
 */
-
 void setup() {
     #ifdef DEBUG_ENABLE
         Serial.begin(57600);
@@ -72,10 +71,11 @@ void setup() {
     localEpoc = (hour * 60 * 60 + minute * 60 + second);
 
     if(WiFi.status() == WL_CONNECTED) {
-        ntpUDP.begin(localPort);            // Запуск UDP для получения времени
-        timeUpdateNTP();                    // Обновление времени
+        ntpUDP.begin(localPort);            // Run UDP for take a time
+        timeUpdateNTP();                    // update Time
     }
 
+    //WEB
     server.begin();
     server.on("/", fileindex);
     server.on("/index", fileindex);
@@ -93,8 +93,11 @@ void setup() {
     server.on("/light.png", lightpng);
     server.on("params.png", parampng);
     server.on("/params.png", parampng);
+    //WEB
 
+    //FS
     SPIFFS.begin();
+    //FS
 }
 
 /*
@@ -332,77 +335,92 @@ void printTime() {
 */
 void getNTPtime() {
 
-        WiFi.hostByName(ntpServerName, timeServerIP);
+    WiFi.hostByName(ntpServerName, timeServerIP);
 
-
-
-        int cb;
-        for(int i = 0; i < 3; i++){
-            memset(packetBuffer, 0, NTP_PACKET_SIZE);
-            packetBuffer[0] = 0b11100011;
-            packetBuffer[1] = 0;
-            packetBuffer[2] = 6;
-            packetBuffer[3] = 0xEC;
-            packetBuffer[12] = 49;
-            packetBuffer[13] = 0x4E;
-            packetBuffer[14] = 49;
-            packetBuffer[15] = 52;
-            ntpUDP.beginPacket(timeServerIP, 123);                       //NTP порт 123
-            ntpUDP.write(packetBuffer, NTP_PACKET_SIZE);
-            ntpUDP.endPacket();
-            delay(800);                                                  // чекаємо пів секуни
-            cb = ntpUDP.parsePacket();
-            if(!cb) Serial.println("          no packet yet..." + String (i + 1));
-            if(!cb && i == 2) {                                          // якщо час не отримано
-            statusUpdateNtpTime = 0;
-            return;                                                    // вихіз з getNTPtime()
-            }
-            if(cb) i = 3;
+    int cb;
+    for(int i = 0; i < 3; i++){
+        memset(packetBuffer, 0, NTP_PACKET_SIZE);
+        packetBuffer[0] = 0b11100011;
+        packetBuffer[1] = 0;
+        packetBuffer[2] = 6;
+        packetBuffer[3] = 0xEC;
+        packetBuffer[12] = 49;
+        packetBuffer[13] = 0x4E;
+        packetBuffer[14] = 49;
+        packetBuffer[15] = 52;
+        ntpUDP.beginPacket(timeServerIP, 123);                       //NTP порт 123
+        ntpUDP.write(packetBuffer, NTP_PACKET_SIZE);
+        ntpUDP.endPacket();
+        delay(800);                                                  // чекаємо пів секуни
+        cb = ntpUDP.parsePacket();
+        if(!cb) Serial.println("          no packet yet..." + String (i + 1));
+        if(!cb && i == 2) {                                          // якщо час не отримано
+        statusUpdateNtpTime = 0;
+        return;                                                    // вихіз з getNTPtime()
         }
-
-        if(cb) {                                                      // якщо отримали пакет з серверу
-            ntpUDP.read(packetBuffer, NTP_PACKET_SIZE);
-            unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-            unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-            unsigned long secsSince1900 = highWord << 16 | lowWord;
-            const unsigned long seventyYears = 2208988800UL;        // Unix час станом на 1 січня 1970. в секундах, то 2208988800:
-            unsigned long epoch = secsSince1900 - seventyYears;
-            boolean summerTime;
-
-            if(month < 3 || month > 10) summerTime = false;             // не переходимо на літній час в січні, лютому, листопаді і грудню
-            if(month > 3 && month < 10) summerTime = true;              // Sommerzeit лічимо в квіні, травні, червені, липні, серпені, вересені
-            if(((month == 3) && (hour + 24 * day)) >= (3 + 24 * (31 - (5 * year / 4 + 4) % 7)) || ((month == 10) && (hour + 24 * day)) < (3 + 24 * (31 - (5 * year / 4 + 1) % 7))) summerTime = true;
-            epoch += (int)(timeZone*3600 + (3600*(summertime   /*isDayLightSaving*/ && summerTime)));
-
-            g_year = 0;
-            int days = 0;
-            uint32_t time;
-            time = epoch/86400;
-            g_hour = (epoch % 86400L) / 3600;
-            g_minute = (epoch % 3600) / 60;
-            g_second = epoch % 60;
-            g_dayOfWeek = (((time) + 4) % 7) + 1;
-            while((unsigned)(days += (LEAP_YEAR(g_year) ? 366 : 365)) <= time) {    // Счет года
-            g_year++;
-            }
-            days -= LEAP_YEAR(g_year) ? 366 : 365;
-            time -= days;
-            days = 0;
-            g_month = 0;
-            uint8_t monthLength = 0;
-            for(g_month = 0; g_month < 12; g_month++){                      // Счет месяца
-            if(g_month == 1){
-                if(LEAP_YEAR(g_year)) monthLength = 29;
-                else monthLength = 28;
-            }
-            else monthLength = monthDays[g_month];
-            if(time >= monthLength) time -= monthLength;
-            else break;
-            }
-            g_month++;
-            g_day = time + 1;
-            g_year += 1970;
-            return;
-        }
-        DEBUG("Nie ma czasu(((");
+        if(cb) i = 3;
     }
+
+    if(cb) {                                                      // якщо отримали пакет з серверу
+        ntpUDP.read(packetBuffer, NTP_PACKET_SIZE);
+        unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
+        unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
+        unsigned long secsSince1900 = highWord << 16 | lowWord;
+        const unsigned long seventyYears = 2208988800UL;        // Unix час станом на 1 січня 1970. в секундах, то 2208988800:
+        unsigned long epoch = secsSince1900 - seventyYears;
+        boolean summerTime;
+
+        if(month < 3 || month > 10) summerTime = false;             // не переходимо на літній час в січні, лютому, листопаді і грудню
+        if(month > 3 && month < 10) summerTime = true;              // Sommerzeit лічимо в квіні, травні, червені, липні, серпені, вересені
+        if(((month == 3) && (hour + 24 * day)) >= (3 + 24 * (31 - (5 * year / 4 + 4) % 7)) || ((month == 10) && (hour + 24 * day)) < (3 + 24 * (31 - (5 * year / 4 + 1) % 7))) summerTime = true;
+        epoch += (int)(timeZone*3600 + (3600*(summertime   /*isDayLightSaving*/ && summerTime)));
+
+        g_year = 0;
+        int days = 0;
+        uint32_t time;
+        time = epoch/86400;
+        g_hour = (epoch % 86400L) / 3600;
+        g_minute = (epoch % 3600) / 60;
+        g_second = epoch % 60;
+        g_dayOfWeek = (((time) + 4) % 7) + 1;
+        while((unsigned)(days += (LEAP_YEAR(g_year) ? 366 : 365)) <= time) {    // Счет года
+        g_year++;
+        }
+        days -= LEAP_YEAR(g_year) ? 366 : 365;
+        time -= days;
+        days = 0;
+        g_month = 0;
+        uint8_t monthLength = 0;
+        for(g_month = 0; g_month < 12; g_month++){                      // Счет месяца
+        if(g_month == 1){
+            if(LEAP_YEAR(g_year)) monthLength = 29;
+            else monthLength = 28;
+        }
+        else monthLength = monthDays[g_month];
+        if(time >= monthLength) time -= monthLength;
+        else break;
+        }
+        g_month++;
+        g_day = time + 1;
+        g_year += 1970;
+        return;
+    }
+    DEBUG("Nie ma czasu(((");
+}
+
+/*
+.##........#######.....###....########...######...#######..##....##.########.####..######..
+.##.......##.....##...##.##...##.....##.##....##.##.....##.###...##.##........##..##....##.
+.##.......##.....##..##...##..##.....##.##.......##.....##.####..##.##........##..##.......
+.##.......##.....##.##.....##.##.....##.##.......##.....##.##.##.##.######....##..##...####
+.##.......##.....##.#########.##.....##.##.......##.....##.##..####.##........##..##....##.
+.##.......##.....##.##.....##.##.....##.##....##.##.....##.##...###.##........##..##....##.
+.########..#######..##.....##.########...######...#######..##....##.##.......####..######..
+*/
+void loadConfiguration(const char *filename, Config &config) {
+    File file = SPIFFS.open(filename, "r");
+
+
+
+
+}

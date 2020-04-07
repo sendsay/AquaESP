@@ -168,11 +168,11 @@ svg circle:nth-child(2) {
     line-height: 50px;
     text-align: center;
     border: 3px solid #07123b;
-    display: block;
+    /* display: block; */
     text-decoration: none;
     /* margin: 300px auto; */
     color: #777;
-    position: relative;
+    /* position: relative; */
     overflow: hidden;
     background: transparent;
     transition: .3s;
