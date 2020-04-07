@@ -2,6 +2,7 @@
 #include <main.h>
 
 #include <FS.h>
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -420,7 +421,32 @@ void getNTPtime() {
 void loadConfiguration(const char *filename, Config &config) {
     File file = SPIFFS.open(filename, "r");
 
+    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
+    DynamicJsonDocument doc(capacity);
 
+    DeserializationError error = deserializeJson(doc, file);
+    if (error) {
+        DEBUG(F("Failed to read file, using default configuration"));
+        DEBUG("Error is :");
+        DEBUG(error.c_str());
+    }
 
+    //Wifi
 
+#ifdef HOME
+    strlcpy(config.ssid, doc["ssid"] | "PUTIN UTELE", sizeof(config.ssid));
+    strlcpy(config.password, doc["password"] | "0674788273", sizeof(config.password));
+#else
+    strlcpy(config.ssid, doc["ssid"] | "SUERTEKSA CNC", sizeof(config.ssid));
+    strlcpy(config.password, doc["password"] | "61347400", sizeof(config.password));
+#endif
+
+    strlcpy(config.ssidAP, doc["ssidAP"] | "AQUA_ROOM_AP", sizeof(config.ssidAP));
+    strlcpy(config.passwordAP, doc["passwordAP"] | "", sizeof(config.passwordAP));
+    //Time
+    config.timeZone = doc["timezone"] | 2.0;
+    config.summertime = doc["summertime"] | 1;
+    strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
+
+    file.close();
 }
