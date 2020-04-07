@@ -2,7 +2,7 @@
 #include <main.h>
 
 #include <FS.h>
-
+#include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -17,7 +17,6 @@
 .##.....##.##.....##.##....##.##.......##....##....##....##....##
 ..#######..########...######..########..######.....##.....######.
 */
-
 ESP8266WebServer server(80);            // web server
 IPAddress apIP(192, 168, 10, 10);       // Adress AP
 WiFiUDP ntpUDP;                         // UDP client for time
@@ -34,7 +33,6 @@ Config config;                          // config structure
 .##........##....##..##.....##.##....##.##.......##.....##.##.....##.##....##..##.......##....##
 .##........##.....##..#######...######..########.########...#######..##.....##.########..######.
 */
-
 void wifiConnect();                     // try connect to Wifi
 void fileindex();                       // web index page
 void fileaqua();                        // web aqua page
@@ -54,6 +52,9 @@ void printFile(const char *filename);   // print file for debug
 void saveConfig(const char *filename, Config &config);  // load config from file
 void loadConfiguration(const char *filename, Config &config);   // save config to file
 void updateTime();                      // update time, work clock!
+void sendData();                        // send data to web
+void restart();                         // restart controller
+
 /*
 ..######..########.########.##.....##.########.
 .##....##.##..........##....##.....##.##.....##
@@ -103,6 +104,10 @@ void setup() {
     server.on("/light.png", lightpng);
     server.on("params.png", parampng);
     server.on("/params.png", parampng);
+
+    server.on("/getData", sendData);
+    server.on("/saveContent", saveContent);
+    server.on("/restart", restart);
     //WEB
 
     //FS
@@ -121,7 +126,6 @@ void setup() {
 .##.......##.....##.##.....##.##.......
 .########..#######...#######..##.......
 */
-
 void loop() {
 // WE SERVER
     server.handleClient();
@@ -141,7 +145,8 @@ void loop() {
 // CHECK WIFI
     if ((second > 30 && second < 38) && (WiFi.status() != WL_CONNECTED || !WIFI_connected)) {
         WIFI_connected = false;
-        DEBUG("============> Check WIFI connect!!!");
+
+        if (secFr == 0) DEBUG("============> Check WIFI connect!!!");
 
         WiFi.disconnect();
         if(minute % 5 == 1) {
@@ -156,8 +161,6 @@ void loop() {
            getNTPtime();               // ***** Получение времени из интернета
         }
     }
-
-
 
 
 }
@@ -255,7 +258,6 @@ void wifiConnect() {
 .##..##..##.##.......##.....##
 ..###..###..########.########.
 */
-
 void fileindex() {
     File file = SPIFFS.open("/index.html.gz", "r");
     size_t sent = server.streamFile(file, "text/html");
@@ -318,6 +320,58 @@ void parampng() {
     File file = SPIFFS.open("/params.png", "r");
     size_t sent = server.streamFile(file, "image/png");
     DEBUG("load param png");
+}
+
+void sendData() {
+    DEBUG("Send data in WEB");
+
+    String json = "{";
+    //wifi
+    json += "\"ssid\":\"";
+    json += config.ssid;
+    json += "\",\"password\":\"";
+    json += config.password;
+    json += "\",\"ssidAP\":\"";
+    json += config.ssidAP;
+    json += "\",\"passwordAP\":\"";
+    json += config.passwordAP;
+    //Time
+    json += "\",\"timezone\":\"";
+    json += config.timeZone;
+    json += "\",\"summertime\":\"";
+    json += config.summerTime;
+    json += "\",\"ntpServerName\":\"";
+    json += config.ntpServerName;
+
+    //TODO: Add sending data to web here!
+
+    json += "\"}";
+
+    server.send (200, "text/json", json);
+    Serial.println(json);
+}
+
+ void saveContent() {
+    DEBUG("save web content!");
+
+    //Wifi
+    server.arg("ssid").toCharArray(config.ssid, 50) ;
+    server.arg("password").toCharArray(config.password, 50) ;
+    server.arg("ssidAP").toCharArray(config.ssidAP, 50) ;
+    server.arg("passwordAP").toCharArray(config.passwordAP, 50) ;
+
+    //Time
+    config.timeZone = server.arg("timezone").toFloat();
+    config.summerTime = server.arg("summertime").toInt();
+    server.arg("ntpServerName").toCharArray(config.ntpServerName, 50) ;
+
+    saveConfig(fileConfigName, config);
+}
+
+void restart() {
+    server.send(200, "text/json", "");
+    delay(100);
+    ESP.restart();
 }
 
 /*

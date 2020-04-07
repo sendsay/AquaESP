@@ -2,7 +2,7 @@
 
 
 #define DEBUG_ENABLE        //DEBUG MODE
-// #define HOME                // switch to home work
+ #define HOME                // switch to home work
 
 #ifdef DEBUG_ENABLE
 #define DEBUG(x) Serial.println(x)
@@ -52,12 +52,11 @@ struct Config {
     char* ssid = "SUERTEKSA CNC";
     char* password = "61347400";
 #endif
-    char* ssidAP      = "Aquarium-AP";         
-    char* passwordAP  = "" ;                   
+    char* ssidAP = "Aquarium-AP";
+    char* passwordAP = "" ;
     float timeZone = 2.0;
     char ntpServerName[50] = "ntp3.time.in.ua";
     int summerTime = 0;
-
 };
 
 const char* fileConfigName = "/config.txt";
