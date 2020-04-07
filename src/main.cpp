@@ -38,10 +38,12 @@ Config config;                          // config structure
 void wifiConnect();                     // try connect to Wifi
 void fileindex();                       // web index page
 void fileaqua();                        // web aqua page
-void filelight();                        // web light page
+void fileparams();                      // web params page 
+void filelight();                       // web light page
 void style();                           // web style css
 void styleaqua();                       // web style aqua css
 void stylelight();                      // web style light css
+void styleparams();                     // web style params css
 void aquapng();                         // web aqua png
 void lightpng();                        // web light png
 void parampng();                        // web param png
@@ -85,12 +87,16 @@ void setup() {
     server.on("/index", fileindex);
     server.on("/aqua.html", fileaqua);
     server.on("/light.html", filelight);
+    server.on("params.html", fileparams);
+    server.on("/params.html", fileparams);
     server.on("style.css", style);
     server.on("/style.css", style);
     server.on("style-aqua.css", styleaqua);
     server.on("/style-aqua.css", styleaqua);
     server.on("style-light.css", stylelight);
     server.on("/style-light.css", stylelight);
+    server.on("style-params.css", styleparams);
+    server.on("/style-params.css", styleparams);
     server.on("aqua.png", aquapng);
     server.on("/aqua.png", aquapng);
     server.on("light.png", lightpng);
@@ -103,7 +109,7 @@ void setup() {
     SPIFFS.begin();
     //FS
 
-    loadConfiguration(fileConfigName, config);
+    loadConfiguration(fileConfigName, config);  //loadconfig from file
 }
 
 /*
@@ -244,6 +250,12 @@ void filelight() {
     DEBUG("load light page");
 }
 
+void fileparams() {
+    File file = SPIFFS.open("/params.html.gz", "r");
+    size_t sent = server.streamFile(file, "text/html");
+    DEBUG("load light page");
+}
+
 void style() {
     File file = SPIFFS.open("/style.css.gz", "r");
     size_t sent = server.streamFile(file, "text/css");
@@ -255,10 +267,17 @@ void styleaqua() {
     size_t sent = server.streamFile(file, "text/css");
     DEBUG("load aqua style css");
 }
+
 void stylelight() {
     File file = SPIFFS.open("/style-light.css.gz", "r");
     size_t sent = server.streamFile(file, "text/css");
     DEBUG("load light style css");
+}
+
+void styleparams() {
+    File file = SPIFFS.open("/style-params.css.gz", "r");
+    size_t sent = server.streamFile(file, "text/css");
+    DEBUG("load params style css");
 }
 
 void aquapng() {
