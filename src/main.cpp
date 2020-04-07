@@ -2,7 +2,7 @@
 #include <main.h>
 
 #include <FS.h>
-#include <ArduinoJson.h>
+
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
@@ -38,7 +38,7 @@ Config config;                          // config structure
 void wifiConnect();                     // try connect to Wifi
 void fileindex();                       // web index page
 void fileaqua();                        // web aqua page
-void fileparams();                      // web params page 
+void fileparams();                      // web params page
 void filelight();                       // web light page
 void style();                           // web style css
 void styleaqua();                       // web style aqua css
@@ -124,18 +124,18 @@ void setup() {
 
 void loop() {
 // WE SERVER
-    server.handleClient();      
+    server.handleClient();
 
 // WORK WITH TIME
-    if(second != lastSecond) {    
+    if(second != lastSecond) {
         lastSecond = second;
-        secFr = 0;                          
+        secFr = 0;
     } else {
         secFr++;
     }
 
 // WORK CLOCK
-    updateTime();              
+    updateTime();
 
 
 // CHECK WIFI
@@ -150,7 +150,16 @@ void loop() {
         }
     }
 
-    
+// Get time every hour from server
+    if ((minute == 0) and (second == 0) and (secFr == 0)) {
+        if (WIFI_connected) {
+           getNTPtime();               // ***** Получение времени из интернета
+        }
+    }
+
+
+
+
 }
 
 /*
@@ -539,9 +548,9 @@ void saveConfig(const char *filename, Config &config) {
     doc["passwordAP"] = config.passwordAP;
     doc["timezone"] = config.timeZone;
     doc["summertime"] = config.summerTime;
-    doc["ntpServerName"] = config.ntpServerName;  
+    doc["ntpServerName"] = config.ntpServerName;
 
-    //TODO: Add all params for saving 
+    //TODO: Add all params for saving
 
     if (serializeJson(doc, file) == 0) {
         Serial.println(F("Failed to write to file"));
