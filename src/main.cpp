@@ -123,17 +123,32 @@ void setup() {
 */
 
 void loop() {
-    server.handleClient();      // web server
+// WE SERVER
+    server.handleClient();      
 
-//=== Работа с временем, поднимем флаг каждую секунду ===================================
-    if(second != lastSecond) {     // счетчик секунд и флаг для процессов                                            // на початку нової секунди скидаємо secFr в "0"
+// WORK WITH TIME
+    if(second != lastSecond) {    
         lastSecond = second;
-        secFr = 0;                          // флаг для процессов
+        secFr = 0;                          
     } else {
         secFr++;
     }
 
-    updateTime();                   // work clock 
+// WORK CLOCK
+    updateTime();              
+
+
+// CHECK WIFI
+    if ((second > 30 && second < 38) && (WiFi.status() != WL_CONNECTED || !WIFI_connected)) {
+        WIFI_connected = false;
+        DEBUG("============> Check WIFI connect!!!");
+
+        WiFi.disconnect();
+        if(minute % 5 == 1) {
+            wifiConnect();
+            if(WiFi.status() == WL_CONNECTED) WIFI_connected = true;
+        }
+    }
 
     
 }

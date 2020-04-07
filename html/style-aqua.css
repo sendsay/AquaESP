@@ -141,7 +141,6 @@ svg circle {
 svg circle:nth-child(2) {
     stroke-dasharray: 440;
     stroke-dashoffset: 440;
-
 }
 
 .box:nth-child(1) svg circle:nth-child(2) {
