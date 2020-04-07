@@ -126,7 +126,7 @@
             </div>
             <div class="col text-left">
                 <div class="flipswitch">
-                    <input type="checkbox" checked="" id="fs" class="flipswitch-cb" name="flipswitch">
+                    <input type="checkbox" id="summerTime" class="flipswitch-cb" name="flipswitch">
                     <label for="fs" class="flipswitch-label">
                         <div class="flipswitch-inner"></div>
                         <div class="flipswitch-switch"></div>
@@ -202,7 +202,7 @@
                 <h4>Выключатель 2 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch1" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw2" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitch2" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw2" title="Min. 1 max. 24 simbols">
             </div>
         </div>
         <div class="row paramrow">
@@ -218,7 +218,7 @@
                 <h4>Выключатель 3 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch2" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw3" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitch3" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw3" title="Min. 1 max. 24 simbols">
             </div>
         </div>
         <div class="row paramrow">
@@ -234,7 +234,7 @@
                 <h4>Выключатель 4 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch3" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw4" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitch4" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw4" title="Min. 1 max. 24 simbols">
             </div>
         </div>
         <div class="row paramrow">
@@ -250,7 +250,7 @@
                 <h4>Выключатель 5 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch4" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw5" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitch5" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw5" title="Min. 1 max. 24 simbols">
             </div>
         </div>
         <div class="row paramrow">
@@ -266,7 +266,7 @@
                 <h4>Выключатель 6 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch5" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw6" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitch6" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw6" title="Min. 1 max. 24 simbols">
             </div>
         </div>
         <div class="row paramrow">
@@ -280,7 +280,7 @@
 
         <div class="row buttonPanel">
             <div class="col text-center">
-                   <span><a href="#" class="btn">Сохранить</a></span>
+                   <span><a href="#" class="btn" onclick="restartButton()">Сохранить</a></span>
             </div>
         </div>
     </div>

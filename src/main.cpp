@@ -54,6 +54,8 @@ void loadConfiguration(const char *filename, Config &config);   // save config t
 void updateTime();                      // update time, work clock!
 void sendData();                        // send data to web
 void restart();                         // restart controller
+void saveContent();                     // save web content
+void script();                          // web script js
 
 /*
 ..######..########.########.##.....##.########.
@@ -71,6 +73,8 @@ void setup() {
 
     DEBUG("");
     DEBUG("START >>>");
+
+    loadConfiguration(fileConfigName, config);  //loadconfig from file
 
     wifiConnect();                      // try connect to Wifi
 
@@ -104,6 +108,9 @@ void setup() {
     server.on("/light.png", lightpng);
     server.on("params.png", parampng);
     server.on("/params.png", parampng);
+    server.on("script.js", script);
+    server.on("/script.js", script);
+
 
     server.on("/getData", sendData);
     server.on("/saveContent", saveContent);
@@ -114,7 +121,6 @@ void setup() {
     SPIFFS.begin();
     //FS
 
-    loadConfiguration(fileConfigName, config);  //loadconfig from file
 }
 
 /*
@@ -186,7 +192,7 @@ void loop() {
 */
 void wifiConnect() {
     printTime();
-    DEBUG("Connecting WiFi (ssid=" + String(ssid) + "  pass=" + String(password) + ") ");
+    DEBUG("Connecting WiFi (ssid=" + String(config.ssid) + "  pass=" + String(config.password) + ") ");
 
 #ifdef DEBUG_ENABLE
     if (!firstStart) Serial.println("Trying connecting to Wifi");
@@ -194,7 +200,7 @@ void wifiConnect() {
 
     WiFi.disconnect();
     WiFi.mode(WIFI_STA);
-    WiFi.begin(ssid, password);
+    WiFi.begin(config.ssid, config.password);
     for (int i = 1; i < 21; i++)
     {
         if (WiFi.status() == WL_CONNECTED)
@@ -237,7 +243,7 @@ void wifiConnect() {
     {
         WiFi.mode(WIFI_AP);
         WiFi.softAPConfig(apIP, apIP, IPAddress(255, 255, 255, 0));
-        WiFi.softAP(ssidAP, passwordAP);
+        WiFi.softAP(config.ssidAP, config.passwordAP);
         printTime();
         DEBUG("Start AP mode!!!");
         DEBUG("Wifi AP IP : ");
@@ -320,6 +326,11 @@ void parampng() {
     File file = SPIFFS.open("/params.png", "r");
     size_t sent = server.streamFile(file, "image/png");
     DEBUG("load param png");
+}
+
+void script() {
+    File file = SPIFFS.open("/script.js.gz", "r");
+    size_t sent = server.streamFile(file, "application/javascript");
 }
 
 void sendData() {
@@ -450,7 +461,7 @@ void printTime() {
 */
 void getNTPtime() {
 
-    WiFi.hostByName(ntpServerName, timeServerIP);
+    WiFi.hostByName(config.ntpServerName, timeServerIP);
 
     int cb;
     for(int i = 0; i < 3; i++){
@@ -488,7 +499,7 @@ void getNTPtime() {
         if(month < 3 || month > 10) summerTime = false;             // не переходимо на літній час в січні, лютому, листопаді і грудню
         if(month > 3 && month < 10) summerTime = true;              // Sommerzeit лічимо в квіні, травні, червені, липні, серпені, вересені
         if(((month == 3) && (hour + 24 * day)) >= (3 + 24 * (31 - (5 * year / 4 + 4) % 7)) || ((month == 10) && (hour + 24 * day)) < (3 + 24 * (31 - (5 * year / 4 + 1) % 7))) summerTime = true;
-        epoch += (int)(timeZone*3600 + (3600*(summertime   /*isDayLightSaving*/ && summerTime)));
+        epoch += (int)(config.timeZone*3600 + (3600*(summertime   /*isDayLightSaving*/ && summerTime)));
 
         g_year = 0;
         int days = 0;
@@ -558,7 +569,7 @@ void loadConfiguration(const char *filename, Config &config) {
 
     //Time
     config.timeZone = doc["timezone"] | 2.0;
-    config.summerTime = doc["summertime"] | 1;
+    config.summerTime = doc["summertime"] | 0;
     strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
 
 
