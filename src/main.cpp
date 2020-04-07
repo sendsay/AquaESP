@@ -48,7 +48,10 @@ void parampng();                        // web param png
 void printTime();                       // print time for debug
 void timeUpdateNTP();                   // update time from iNet
 void getNTPtime();                      // get time from server
-
+void printFile(const char *filename);   // print file for debug
+void saveConfig(const char *filename, Config &config);  // load config from file
+void loadConfiguration(const char *filename, Config &config);   // save config to file
+void updateTime();                      // update time, work clock!
 /*
 ..######..########.########.##.....##.########.
 .##....##.##..........##....##.....##.##.....##
@@ -99,6 +102,8 @@ void setup() {
     //FS
     SPIFFS.begin();
     //FS
+
+    loadConfiguration(fileConfigName, config);
 }
 
 /*
@@ -113,6 +118,18 @@ void setup() {
 
 void loop() {
     server.handleClient();      // web server
+
+//=== Работа с временем, поднимем флаг каждую секунду ===================================
+    if(second != lastSecond) {     // счетчик секунд и флаг для процессов                                            // на початку нової секунди скидаємо secFr в "0"
+        lastSecond = second;
+        secFr = 0;                          // флаг для процессов
+    } else {
+        secFr++;
+    }
+
+    updateTime();                   // work clock 
+
+    
 }
 
 /*
@@ -410,13 +427,13 @@ void getNTPtime() {
 }
 
 /*
-.##........#######.....###....########...######...#######..##....##.########.####..######..
-.##.......##.....##...##.##...##.....##.##....##.##.....##.###...##.##........##..##....##.
-.##.......##.....##..##...##..##.....##.##.......##.....##.####..##.##........##..##.......
-.##.......##.....##.##.....##.##.....##.##.......##.....##.##.##.##.######....##..##...####
-.##.......##.....##.#########.##.....##.##.......##.....##.##..####.##........##..##....##.
-.##.......##.....##.##.....##.##.....##.##....##.##.....##.##...###.##........##..##....##.
-.########..#######..##.....##.########...######...#######..##....##.##.......####..######..
+.##........#######.....###....########...........######...#######..##....##.########.####..######..
+.##.......##.....##...##.##...##.....##.........##....##.##.....##.###...##.##........##..##....##.
+.##.......##.....##..##...##..##.....##.........##.......##.....##.####..##.##........##..##.......
+.##.......##.....##.##.....##.##.....##.........##.......##.....##.##.##.##.######....##..##...####
+.##.......##.....##.#########.##.....##.........##.......##.....##.##..####.##........##..##....##.
+.##.......##.....##.##.....##.##.....##.........##....##.##.....##.##...###.##........##..##....##.
+.########..#######..##.....##.########..#######..######...#######..##....##.##.......####..######..
 */
 void loadConfiguration(const char *filename, Config &config) {
     File file = SPIFFS.open(filename, "r");
@@ -432,7 +449,6 @@ void loadConfiguration(const char *filename, Config &config) {
     }
 
     //Wifi
-
 #ifdef HOME
     strlcpy(config.ssid, doc["ssid"] | "PUTIN UTELE", sizeof(config.ssid));
     strlcpy(config.password, doc["password"] | "0674788273", sizeof(config.password));
@@ -440,13 +456,111 @@ void loadConfiguration(const char *filename, Config &config) {
     strlcpy(config.ssid, doc["ssid"] | "SUERTEKSA CNC", sizeof(config.ssid));
     strlcpy(config.password, doc["password"] | "61347400", sizeof(config.password));
 #endif
-
     strlcpy(config.ssidAP, doc["ssidAP"] | "AQUA_ROOM_AP", sizeof(config.ssidAP));
     strlcpy(config.passwordAP, doc["passwordAP"] | "", sizeof(config.passwordAP));
+
     //Time
     config.timeZone = doc["timezone"] | 2.0;
-    config.summertime = doc["summertime"] | 1;
+    config.summerTime = doc["summertime"] | 1;
     strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
 
+
+    // TODO: Add all parameters for loading
+
+
+#ifdef DEBUG
+    DEBUG("****** LOAD FILE ******");
+    printFile(fileConfigName);
+#endif
+
     file.close();
+}
+
+/*
+..######.....###....##.....##.########..........######...#######..##....##.########.####..######..
+.##....##...##.##...##.....##.##...............##....##.##.....##.###...##.##........##..##....##.
+.##........##...##..##.....##.##...............##.......##.....##.####..##.##........##..##.......
+..######..##.....##.##.....##.######...........##.......##.....##.##.##.##.######....##..##...####
+.......##.#########..##...##..##...............##.......##.....##.##..####.##........##..##....##.
+.##....##.##.....##...##.##...##...............##....##.##.....##.##...###.##........##..##....##.
+..######..##.....##....###....########.#######..######...#######..##....##.##.......####..######..
+*/
+void saveConfig(const char *filename, Config &config) {
+
+    SPIFFS.remove(filename);
+
+   // Open file for writing
+    File file = SPIFFS.open(filename, "w");
+    if (!file) {
+        Serial.println(F("Failed to create file"));
+        return;
+    }
+
+    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
+    DynamicJsonDocument doc(capacity);
+
+    doc["ssid"] = config.ssid;
+    doc["password"] = config.password;
+    doc["ssidAP"] = config.ssidAP;
+    doc["passwordAP"] = config.passwordAP;
+    doc["timezone"] = config.timeZone;
+    doc["summertime"] = config.summerTime;
+    doc["ntpServerName"] = config.ntpServerName;  
+
+    //TODO: Add all params for saving 
+
+    if (serializeJson(doc, file) == 0) {
+        Serial.println(F("Failed to write to file"));
+    }
+
+#ifdef DEBUG
+    DEBUG("****** SAVE FILE ******");
+    printFile(fileConfigName);
+#endif
+
+    file.close();
+}
+
+/*
+.########..########..####.##....##.########.........########.####.##.......########
+.##.....##.##.....##..##..###...##....##............##........##..##.......##......
+.##.....##.##.....##..##..####..##....##............##........##..##.......##......
+.########..########...##..##.##.##....##............######....##..##.......######..
+.##........##...##....##..##..####....##............##........##..##.......##......
+.##........##....##...##..##...###....##............##........##..##.......##......
+.##........##.....##.####.##....##....##....#######.##.......####.########.########
+*/
+void printFile(const char *filename) {
+  // Open file for reading
+  File file = SPIFFS.open(filename, "r");
+  if (!file) {
+    DEBUG(F("Failed to read file"));
+    return;
+  }
+
+  // Extract each characters by one by one
+  while (file.available()) {
+    Serial.print((char)file.read());
+  }
+
+  // Close the file
+  file.close();
+}
+
+/*
+.##.....##.########..########.....###....########.########.........########.####.##.....##.########
+.##.....##.##.....##.##.....##...##.##......##....##..................##.....##..###...###.##......
+.##.....##.##.....##.##.....##..##...##.....##....##..................##.....##..####.####.##......
+.##.....##.########..##.....##.##.....##....##....######..............##.....##..##.###.##.######..
+.##.....##.##........##.....##.#########....##....##..................##.....##..##.....##.##......
+.##.....##.##........##.....##.##.....##....##....##..................##.....##..##.....##.##......
+..#######..##........########..##.....##....##....########.#######....##....####.##.....##.########
+*/
+void updateTime() {
+  long curEpoch = localEpoc + ((millis() - localMillisAtUpdate) / 1000);
+  long epoch = round(double((curEpoch + 86400L) % 86400L));
+  hour = ((epoch % 86400L) / 3600) % 24;
+
+  minute = (epoch % 3600) / 60;
+  second = epoch % 60;
 }
