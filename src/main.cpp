@@ -23,7 +23,6 @@ WiFiUDP ntpUDP;                         // UDP client for time
 IPAddress timeServerIP;                 // server IP adress
 Config config;                          // config structure
 
-
 /*
 .########..########...#######...######..########.########..##.....##.########..########..######.
 .##.....##.##.....##.##.....##.##....##.##.......##.....##.##.....##.##.....##.##.......##....##
@@ -121,6 +120,8 @@ void setup() {
     SPIFFS.begin();
     //FS
 
+  //  saveConfig(fileConfigName, config);
+
 }
 
 /*
@@ -167,6 +168,12 @@ void loop() {
            getNTPtime();               // ***** Получение времени из интернета
         }
     }
+
+    if ((not secFr) and (minute == 0))
+    {
+        printTime();
+    }
+    
 
 
 }

@@ -1,0 +1,1 @@
+{"ssid":"SUERTEKSA CNC","password":"61347400","ssidAP":"AQUA_ROOM_AP","passwordAP":"","timezone":2,"summertime":0,"ntpServerName":"ntp3.time.in.ua"}

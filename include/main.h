@@ -2,7 +2,7 @@
 
 
 #define DEBUG_ENABLE        //DEBUG MODE
- #define HOME                // switch to home work
+//  #define HOME                // switch to home work
 
 #ifdef DEBUG_ENABLE
 #define DEBUG(x) Serial.println(x)
