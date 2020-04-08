@@ -70,10 +70,16 @@ void setup() {
         Serial.begin(57600);
     #endif
 
+    //FS
+    SPIFFS.begin();
+    //FS
+
     DEBUG("");
     DEBUG("START >>>");
 
     loadConfiguration(fileConfigName, config);  //loadconfig from file
+
+    DEBUG("");
 
     wifiConnect();                      // try connect to Wifi
 
@@ -84,10 +90,6 @@ void setup() {
         ntpUDP.begin(localPort);            // Run UDP for take a time
         timeUpdateNTP();                    // update Time
     }
-
-DEBUG("OK");
-    saveConfig(fileConfigName, config);
-
 
     //WEB
     server.begin();
@@ -119,13 +121,6 @@ DEBUG("OK");
     server.on("/saveContent", saveContent);
     server.on("/restart", restart);
     //WEB
-
-    //FS
-    SPIFFS.begin();
-    //FS
-
-    saveConfig(fileConfigName, config);
-
 }
 
 /*
@@ -177,7 +172,7 @@ void loop() {
     {
         printTime();
     }
-    
+
 
 
 }
@@ -555,9 +550,11 @@ void getNTPtime() {
 .########..#######..##.....##.########..#######..######...#######..##....##.##.......####..######..
 */
 void loadConfiguration(const char *filename, Config &config) {
-    File file = SPIFFS.open(filename, "r");
 
-    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
+    File file = SPIFFS.open("/config.txt", "r");
+
+
+    const size_t capacity = JSON_OBJECT_SIZE(7) + 200;
     DynamicJsonDocument doc(capacity);
 
     DeserializationError error = deserializeJson(doc, file);
@@ -576,7 +573,7 @@ void loadConfiguration(const char *filename, Config &config) {
     strlcpy(config.password, doc["password"] | "61347400", sizeof(config.password));
 #endif
     strlcpy(config.ssidAP, doc["ssidAP"] | "AQUA_ROOM_AP", sizeof(config.ssidAP));
-    strlcpy(config.passwordAP, doc["passwordAP"] | "", sizeof(config.passwordAP));
+    strlcpy(config.passwordAP, doc["passwordAP"] | "1111", sizeof(config.passwordAP));
 
     //Time
     config.timeZone = doc["timezone"] | 2.0;

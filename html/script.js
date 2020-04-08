@@ -18,16 +18,15 @@ function getData() {
             document.getElementById("passwordAP").value = json.passwordAP;
             //time
             document.getElementById("timezone").value = json.timezone;
+
             if (json.summertime == 1) {document.getElementById("summerTime").checked = true; }
+
             document.getElementById("ntpServerName").value = json.ntpServerName;
 
 
-            console.log("LOAD");
+            console.log(str);
         }
     }
-
-    console.log("************* get from server ");
-    console.log(json);
 }
 
 function val(id){
@@ -52,7 +51,7 @@ function restartButton() {
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
-                    "&sigOn=" + val('sigOn') + "&sigOff=" + val('sigOff') + "&ntpServerName=" + val('ntpServerName');
+                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName');
 
     console.log("************* send to server ");
     console.log(content);
