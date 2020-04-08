@@ -21,8 +21,13 @@ function getData() {
             if (json.summertime == 1) {document.getElementById("summerTime").checked = true; }
             document.getElementById("ntpServerName").value = json.ntpServerName;
 
+
+            console.log("LOAD");
         }
     }
+
+    console.log("************* get from server ");
+    console.log(json);
 }
 
 function val(id){
@@ -40,5 +45,18 @@ return 0;
 
 function restartButton() {
     xmlHttp.open("GET", "/restart", true);
+    xmlHttp.send();
+}
+3
+
+function saveButton() {
+    var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
+                    "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
+                    "&sigOn=" + val('sigOn') + "&sigOff=" + val('sigOff') + "&ntpServerName=" + val('ntpServerName');
+
+    console.log("************* send to server ");
+    console.log(content);
+
+    xmlHttp.open('GET', content,true);
     xmlHttp.send();
 }

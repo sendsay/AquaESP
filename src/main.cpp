@@ -85,6 +85,10 @@ void setup() {
         timeUpdateNTP();                    // update Time
     }
 
+DEBUG("OK");
+    saveConfig(fileConfigName, config);
+
+
     //WEB
     server.begin();
     server.on("/", fileindex);
@@ -120,7 +124,7 @@ void setup() {
     SPIFFS.begin();
     //FS
 
-  //  saveConfig(fileConfigName, config);
+    saveConfig(fileConfigName, config);
 
 }
 
