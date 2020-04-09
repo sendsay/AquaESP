@@ -18,11 +18,8 @@ function getData() {
             document.getElementById("passwordAP").value = json.passwordAP;
             //time
             document.getElementById("timezone").value = json.timezone;
-
             if (json.summertime == 1) {document.getElementById("summerTime").checked = true; }
-
             document.getElementById("ntpServerName").value = json.ntpServerName;
-
 
             console.log(str);
         }
@@ -46,7 +43,6 @@ function restartButton() {
     xmlHttp.open("GET", "/restart", true);
     xmlHttp.send();
 }
-3
 
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
@@ -59,12 +55,3 @@ function saveButton() {
     xmlHttp.open('GET', content,true);
     xmlHttp.send();
 }
-
-function changeContent(changeWhat) {
-    // var changeMqttOn = document.getElementById("mqttOn1").checked;
-
-    var sectionChange = document.getElementById("summerTime");
-
-    sectionChange.checked() = not changeWhat;
-
-  }
