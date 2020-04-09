@@ -49,10 +49,10 @@
 }
 
 .buttonPanel {
-  margin-top: 30px;
+  padding: 20px 0px;
+  margin-top: 20px;
   border-top: solid 1px rgb(17, 201, 1);
 }
-
 
 .onoffswitch {
   position: relative; width: 84px;
@@ -120,6 +120,7 @@
   transition: .3s;
   z-index: 2;
   font-weight: 700;
+  margin: auto;
 }
 
 .btn:before {
