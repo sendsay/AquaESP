@@ -59,3 +59,12 @@ function saveButton() {
     xmlHttp.open('GET', content,true);
     xmlHttp.send();
 }
+
+function changeContent(changeWhat) {
+    // var changeMqttOn = document.getElementById("mqttOn1").checked;
+
+    var sectionChange = document.getElementById("summerTime");
+
+    sectionChange.checked() = not changeWhat;
+
+  }
