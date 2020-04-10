@@ -61,3 +61,9 @@ struct Config {
 
 const char* fileConfigName = "/config.txt";
 // Config structure
+
+// Modes
+enum Modes {NOTHING, CHECKSENSORS, FEEDFISH, ALARM};
+
+// Errors
+enum Errors {NOTHING, WATERLEVEL, TEMPERATURE, PH, EDC};

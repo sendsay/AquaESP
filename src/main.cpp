@@ -1,12 +1,13 @@
 #include <Arduino.h>
-#include <main.h>
-
 #include <FS.h>
 #include <ArduinoJson.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
 #include <ESP8266WebServer.h>
 #include <WiFiUdp.h>
+#include <Ticker.h>
+
+#include <main.h>
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -121,7 +122,7 @@ void setup() {
     server.on("/saveContent", saveContent);
     server.on("/restart", restart);
     //WEB
-}
+}//SETUP
 
 /*
 .##........#######...#######..########.
@@ -175,7 +176,10 @@ void loop() {
 
 
 
-}
+
+
+
+}//LOOP
 
 /*
 .########.##.....##.##....##..######..########.####..#######..##....##..######.
