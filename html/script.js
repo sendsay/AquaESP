@@ -21,6 +21,13 @@ function getData() {
             if (json.summertime == 1) {document.getElementById("summerTime").checked = true; }
             document.getElementById("ntpServerName").value = json.ntpServerName;
 
+            //mqtt
+            //TODO: Add MQTT for SonOFF
+
+            //aqua
+            document.getElementById("feedTime").value = json.feedTime;
+
+
             console.log(str);
         }
     }
@@ -47,7 +54,8 @@ function restartButton() {
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
-                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName');
+                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime')
+                    ;
 
     console.log("************* send to server ");
     console.log(content);

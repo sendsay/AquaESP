@@ -10,21 +10,6 @@
 #include <main.h>
 
 /*
-..#######..########........##.########..######..########..######.
-.##.....##.##.....##.......##.##.......##....##....##....##....##
-.##.....##.##.....##.......##.##.......##..........##....##......
-.##.....##.########........##.######...##..........##.....######.
-.##.....##.##.....##.##....##.##.......##..........##..........##
-.##.....##.##.....##.##....##.##.......##....##....##....##....##
-..#######..########...######..########..######.....##.....######.
-*/
-ESP8266WebServer server(80);            // web server
-IPAddress apIP(192, 168, 10, 10);       // Adress AP
-WiFiUDP ntpUDP;                         // UDP client for time
-IPAddress timeServerIP;                 // server IP adress
-Config config;                          // config structure
-
-/*
 .########..########...#######...######..########.########..##.....##.########..########..######.
 .##.....##.##.....##.##.....##.##....##.##.......##.....##.##.....##.##.....##.##.......##....##
 .##.....##.##.....##.##.....##.##.......##.......##.....##.##.....##.##.....##.##.......##......
@@ -56,6 +41,29 @@ void sendData();                        // send data to web
 void restart();                         // restart controller
 void saveContent();                     // save web content
 void script();                          // web script js
+
+
+
+// void fishFeeding();
+
+// void testFunc();
+
+/*
+..#######..########........##.########..######..########..######.
+.##.....##.##.....##.......##.##.......##....##....##....##....##
+.##.....##.##.....##.......##.##.......##..........##....##......
+.##.....##.########........##.######...##..........##.....######.
+.##.....##.##.....##.##....##.##.......##..........##..........##
+.##.....##.##.....##.##....##.##.......##....##....##....##....##
+..#######..########...######..########..######.....##.....######.
+*/
+ESP8266WebServer server(80);            // web server
+IPAddress apIP(192, 168, 10, 10);       // Adress AP
+WiFiUDP ntpUDP;                         // UDP client for time
+IPAddress timeServerIP;                 // server IP adress
+Config config;                          // config structure
+
+// Ticker testTimer(testFunc, 60000, MILLIS);
 
 /*
 ..######..########.########.##.....##.########.
@@ -122,6 +130,19 @@ void setup() {
     server.on("/saveContent", saveContent);
     server.on("/restart", restart);
     //WEB
+
+    //PINS
+    pinMode(PIN_FEEDING, OUTPUT);               // Motor feeder
+    pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
+    //PINS
+
+    // currMode = FEEDFISH;
+    // waitFeedEnd = true;          // flag limit up
+
+
+    // digitalWrite(PIN_FEEDING, HIGH);
+
+    DEBUG("RUNNING!!!");
 }//SETUP
 
 /*
@@ -163,21 +184,74 @@ void loop() {
     }
 
 // Get time every hour from server
-    if ((minute == 0) and (second == 0) and (secFr == 0)) {
+    if ((minute == 59) and (second == 0) and (secFr == 0)) {
         if (WIFI_connected) {
            getNTPtime();               // ***** Получение времени из интернета
         }
     }
 
-    if ((not secFr) and (minute == 0))
+#ifdef DEBUG
+    if ((minute == 0) and (second == 0) and (secFr == 0))
     {
         printTime();
+    }
+#endif
+
+    //feeding
+    if ((hour == config.feedTime) and  (minute == 0) and  (second == 0) and (secFr == 0))
+    {
+        currMode = FEEDFISH;            // time for fish feed
+        waitFeedEnd = true;             // flag limit up
+
+        printTime();
+        DEBUG("Fish feeding");
+    }
+
+
+
+
+/*
+.##.....##..#######..########..########..######.
+.###...###.##.....##.##.....##.##.......##....##
+.####.####.##.....##.##.....##.##.......##......
+.##.###.##.##.....##.##.....##.######....######.
+.##.....##.##.....##.##.....##.##.............##
+.##.....##.##.....##.##.....##.##.......##....##
+.##.....##..#######..########..########..######.
+*/
+    //Work modes
+    switch (currMode) {
+
+        case FEEDFISH:  //fishfeeding
+
+            digitalWrite(PIN_FEEDING, HIGH);         // start feeder
+
+            while ((digitalRead(PIN_FEEDLIMIT) == LOW) and (waitFeedEnd == true)) {}  // wait rotate
+
+            waitFeedEnd = false;
+
+            if (digitalRead(PIN_FEEDLIMIT) == LOW)      //end feeding
+            {
+                digitalWrite(PIN_FEEDING, LOW);
+                waitFeedEnd = false;
+                currMode = NOTHING;
+
+                DEBUG("End feeding");
+            }
+        break;
+
+    default:
+        break;
     }
 
 
 
 
 
+
+
+
+    // testTimer.update();     // test timer loop update
 
 }//LOOP
 
@@ -364,6 +438,14 @@ void sendData() {
     json += "\",\"ntpServerName\":\"";
     json += config.ntpServerName;
 
+    //MQTT
+    //TODO: Add MQTT for sonOFF
+
+    //Aqua
+    json += "\",\"feedTime\":\"";
+    json += config.feedTime;
+
+
     //TODO: Add sending data to web here!
 
     json += "\"}";
@@ -385,6 +467,13 @@ void sendData() {
     config.timeZone = server.arg("timezone").toFloat();
     config.summerTime = server.arg("summertime").toInt();
     server.arg("ntpServerName").toCharArray(config.ntpServerName, 50) ;
+
+    //MQTT
+    //TODO: Add MQTT for sonOFF
+
+    //Aqua
+    config.feedTime = server.arg("feedTime").toInt();
+
 
     saveConfig(fileConfigName, config);
 }
@@ -584,6 +673,12 @@ void loadConfiguration(const char *filename, Config &config) {
     config.summerTime = doc["summertime"] | 0;
     strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
 
+    //MQTT
+    //TODO: Add MQTT for sonOFF
+
+    //Aqua
+    config.feedTime = doc["feedTime"] | 7;
+
 
     // TODO: Add all parameters for loading
 
@@ -626,6 +721,7 @@ void saveConfig(const char *filename, Config &config) {
     doc["timezone"] = config.timeZone;
     doc["summertime"] = config.summerTime;
     doc["ntpServerName"] = config.ntpServerName;
+    doc["feedTime"] = config.feedTime;
 
     //TODO: Add all params for saving
 
@@ -684,3 +780,40 @@ void updateTime() {
   minute = (epoch % 3600) / 60;
   second = epoch % 60;
 }
+
+// void fishFeeding() {
+// 	// if (not alarmNow)
+// 	// {
+// 		if (waitFeedEnd == true)
+// 		{
+// 			DEBUG("Fish feeding! > ");
+// 			// alarm(signal.START_FEEDING);
+// 			digitalWrite(PIN_FEEDING, HIGH);  //startFeeding
+// 			waitFeedEnd = false;
+
+// 			delay(2000);
+// 			while ((digitalRead(PIN_FEEDLIMIT) == HIGH) and (waitFeedEnd == false))
+// 			{
+// 		    	//Wait until rotate
+//                 DEBUG("wait rotate");
+// 			}
+// 			digitalWrite(PIN_FEEDING, LOW);   //stop
+//             currMode = NOTHING;
+
+
+// 			// startFeeding = false;
+// 			// alarm(signal.END_OPERATION);
+// 		}
+// 	// }
+// }
+
+
+// void testFunc() {
+
+//     currMode = FEEDFISH;            // time for fish feed
+
+//     printTime();
+//     DEBUG("FISH FEEDING");
+// }
+
+//END.

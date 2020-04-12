@@ -2,7 +2,8 @@
 
 
 #define DEBUG_ENABLE        //DEBUG MODE
- #define HOME                // switch to home work
+
+#define HOME                // switch to home work
 
 #ifdef DEBUG_ENABLE
 #define DEBUG(x) Serial.println(x)
@@ -10,15 +11,8 @@
 #define DEBUG(x)
 #endif
 
-// #ifdef HOME
-// const char* ssid = "PUTIN UTELE";
-// const char* password = "0674788273";
-// #else
-// const char* ssid = "SUERTEKSA CNC";
-// const char* password = "61347400";
-// #endif
-// const char* ssidAP      = "Aquarium-AP";         // Назва точки доступу
-// const char* passwordAP  = "" ;                   // Пароль точки доступу
+#define PIN_FEEDING D2                    // Pin motor feeding
+#define PIN_FEEDLIMIT D0                  // Pin feed mechanism limit
 
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ
@@ -57,6 +51,8 @@ struct Config {
     float timeZone = 2.0;
     char ntpServerName[50] = "ntp3.time.in.ua";
     int summerTime = 0;
+
+    int feedTime = 7;    // hour for fish feeding
 };
 
 const char* fileConfigName = "/config.txt";
@@ -64,6 +60,11 @@ const char* fileConfigName = "/config.txt";
 
 // Modes
 enum Modes {NOTHING, CHECKSENSORS, FEEDFISH, ALARM};
+int currMode = 0;
 
 // Errors
-enum Errors {NOTHING, WATERLEVEL, TEMPERATURE, PH, EDC};
+enum Errors {NOERRORS, WATERLEVEL, TEMPERATURE, PH, EDC};
+
+boolean waitFeedEnd = false;
+
+//END.
