@@ -11,8 +11,9 @@
 #define DEBUG(x)
 #endif
 
-#define PIN_FEEDING D2                    // Pin motor feeding
-#define PIN_FEEDLIMIT D0                  // Pin feed mechanism limit
+#define PIN_FEEDING D2                      // Pin motor feeding
+#define PIN_FEEDLIMIT D0                    // Pin feed mechanism limit
+#define PIN_BEEPER D5                       // Pin buzzer
 
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ

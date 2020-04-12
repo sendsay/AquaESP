@@ -134,6 +134,7 @@ void setup() {
     //PINS
     pinMode(PIN_FEEDING, OUTPUT);               // Motor feeder
     pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
+    pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
     //PINS
 
     // currMode = FEEDFISH;
