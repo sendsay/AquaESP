@@ -1,5 +1,7 @@
 var xmlHttp = new XMLHttpRequest();
 
+setInterval(getSensorsData, 3000);
+
 function getData() {
 
     if(xmlHttp.readyState==0 || xmlHttp.readyState==4){
@@ -62,4 +64,28 @@ function saveButton() {
 
     xmlHttp.open('GET', content,true);
     xmlHttp.send();
+}
+
+function getSensorsData() {
+    if(xmlHttp.readyState==0 || xmlHttp.readyState==4){
+        xmlHttp.open('GET','/getSensorsData',true);
+        xmlHttp.send();
+        xmlHttp.onload = function(e) {
+
+            var str = xmlHttp.responseText;
+
+            json=JSON.parse(str);
+
+            temp = json.temp;
+
+
+        }
+    }
+
+    temp = 3;
+    calc = (440 - (440 * temp) / 30);
+    $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+
+
+
 }
