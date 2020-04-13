@@ -6,6 +6,9 @@
 #include <ESP8266WebServer.h>
 #include <WiFiUdp.h>
 #include <Ticker.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+
 
 #include <main.h>
 
@@ -41,12 +44,8 @@ void sendData();                        // send data to web
 void restart();                         // restart controller
 void saveContent();                     // save web content
 void script();                          // web script js
+void getTemp();                         // get water temp timer func
 
-
-
-// void fishFeeding();
-
-// void testFunc();
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -58,12 +57,15 @@ void script();                          // web script js
 ..#######..########...######..########..######.....##.....######.
 */
 ESP8266WebServer server(80);            // web server
-IPAddress apIP(192, 168, 10, 10);       // Adress AP
-WiFiUDP ntpUDP;                         // UDP client for time
+IPAddress apIP(192, 168, 10, 10);       // adress AP
+WiFiUDP ntpUDP;                         // DP client for time
 IPAddress timeServerIP;                 // server IP adress
 Config config;                          // config structure
+OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
+DallasTemperature sensors(&oneWire);    // aqua temp probe
 
-// Ticker testTimer(testFunc, 60000, MILLIS);
+
+
 
 /*
 ..######..########.########.##.....##.########.
@@ -137,11 +139,7 @@ void setup() {
     pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
     //PINS
 
-    // currMode = FEEDFISH;
-    // waitFeedEnd = true;          // flag limit up
-
-
-    // digitalWrite(PIN_FEEDING, HIGH);
+    sensors.begin();                            // start aqua temp probe
 
     DEBUG("RUNNING!!!");
 }//SETUP
@@ -156,7 +154,8 @@ void setup() {
 .########..#######...#######..##.......
 */
 void loop() {
-// WE SERVER
+
+// WEB SERVER
     server.handleClient();
 
 // WORK WITH TIME
@@ -199,7 +198,7 @@ void loop() {
 #endif
 
     //feeding
-    if ((hour == config.feedTime) and  (minute == 0) and  (second == 0) and (secFr == 0))
+    if ((hour == config.feedTime) and (minute == 0) and (second == 0) and (secFr == 0))
     {
         currMode = FEEDFISH;            // time for fish feed
         waitFeedEnd = true;             // flag limit up
@@ -207,7 +206,6 @@ void loop() {
         printTime();
         DEBUG("Fish feeding");
     }
-
 
 
 
@@ -245,14 +243,25 @@ void loop() {
         break;
     }
 
+    // GET SENSORS
+    if ((second % 10 == 0) and (secFr == 0)) {
+        // water temp
+        sensors.requestTemperatures();
+        waterTemp = sensors.getTempCByIndex(0);
+
+        printTime();
+        DEBUG("Water temp is: ");
+        DEBUG(waterTemp);
+
+
+        //pH
+
+        //EDC
 
 
 
+    }
 
-
-
-
-    // testTimer.update();     // test timer loop update
 
 }//LOOP
 
@@ -781,6 +790,27 @@ void updateTime() {
   minute = (epoch % 3600) / 60;
   second = epoch % 60;
 }
+
+/*
+..######...########.########....##......##....###....########.########.########.....########.########.##.....##.########.
+.##....##..##..........##.......##..##..##...##.##......##....##.......##.....##.......##....##.......###...###.##.....##
+.##........##..........##.......##..##..##..##...##.....##....##.......##.....##.......##....##.......####.####.##.....##
+.##...####.######......##.......##..##..##.##.....##....##....######...########........##....######...##.###.##.########.
+.##....##..##..........##.......##..##..##.#########....##....##.......##...##.........##....##.......##.....##.##.......
+.##....##..##..........##.......##..##..##.##.....##....##....##.......##....##........##....##.......##.....##.##.......
+..######...########....##........###..###..##.....##....##....########.##.....##.......##....########.##.....##.##.......
+*/
+void getTemp() {
+
+
+
+
+
+}
+
+
+
+
 
 // void fishFeeding() {
 // 	// if (not alarmNow)

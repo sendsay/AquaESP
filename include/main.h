@@ -14,6 +14,7 @@
 #define PIN_FEEDING D2                      // Pin motor feeding
 #define PIN_FEEDLIMIT D0                    // Pin feed mechanism limit
 #define PIN_BEEPER D5                       // Pin buzzer
+#define ONE_WIRE_BUS D1                     // Aqua temp port adress
 
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ
@@ -66,6 +67,9 @@ int currMode = 0;
 // Errors
 enum Errors {NOERRORS, WATERLEVEL, TEMPERATURE, PH, EDC};
 
-boolean waitFeedEnd = false;
+boolean waitFeedEnd = false;                // for fish feed flag
+float waterTemp = 85;                       // water temp
+
+
 
 //END.
