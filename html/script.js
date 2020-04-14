@@ -76,17 +76,42 @@ function getSensorsData() {
 
             json=JSON.parse(str);
 
+
+            // temperature
             temp = json.temp;
             calc = (440 - (440 * temp) / 30);
             $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("temp").innerHTML = temp + " <span>°C</span>";
 
+            // pH
+
+
+            // EDC
+
+
             console.log(json);
         }
     }
-
-
-
-
-
 }
+
+function feedButton() {
+    xmlHttp.open("GET", "/feedFish", true);
+    xmlHttp.send();
+}
+
+/*
+.########.##....##.########.
+.##.......###...##.##.....##
+.##.......####..##.##.....##
+.######...##.##.##.##.....##
+.##.......##..####.##.....##
+.##.......##...###.##.....##
+.########.##....##.########.
+
+
+
+
+
+
+
+*/

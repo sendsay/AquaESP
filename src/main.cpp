@@ -46,6 +46,7 @@ void saveContent();                     // save web content
 void script();                          // web script js
 void getTemp();                         // get water temp timer func
 void getSensorsData();                  // get and send sensors data
+void feedFish();                         // manual feed fish
 
 
 /*
@@ -64,8 +65,6 @@ IPAddress timeServerIP;                 // server IP adress
 Config config;                          // config structure
 OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
 DallasTemperature sensors(&oneWire);    // aqua temp probe
-
-
 
 
 /*
@@ -133,6 +132,7 @@ void setup() {
     server.on("/saveContent", saveContent);
     server.on("/restart", restart);
     server.on("/getSensorsData", getSensorsData);
+    server.on("/feedFish", feedFish);
     //WEB
 
     //PINS
@@ -497,11 +497,23 @@ void getSensorsData() {
     json += "\"temp\":\"";
     json += waterTemp;
 
+    //pH
+
+    //EDC
+
 
     json += "\"}";
 
     server.send (200, "text/json", json);
 }
+
+void feedFish() {
+    currMode = FEEDFISH;            // time for fish feed
+    waitFeedEnd = true;             // flag limit up
+}
+
+
+
 
 /*
 .##.....##.########..########.....###....########.########.########.####.##.....##.########
