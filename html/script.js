@@ -77,14 +77,15 @@ function getSensorsData() {
             json=JSON.parse(str);
 
             temp = json.temp;
+            calc = (440 - (440 * temp) / 30);
+            $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+            document.getElementById("temp").innerHTML = temp + " <span>°C</span>";
 
-
+            console.log(json);
         }
     }
 
-    temp = 3;
-    calc = (440 - (440 * temp) / 30);
-    $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+
 
 
 

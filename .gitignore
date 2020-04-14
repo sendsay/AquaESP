@@ -4,3 +4,4 @@
 .vscode/launch.json
 .vscode/ipch
 copy.cmd
+data\config.txt

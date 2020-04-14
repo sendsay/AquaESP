@@ -45,6 +45,7 @@ void restart();                         // restart controller
 void saveContent();                     // save web content
 void script();                          // web script js
 void getTemp();                         // get water temp timer func
+void getSensorsData();                  // get and send sensors data
 
 
 /*
@@ -131,6 +132,7 @@ void setup() {
     server.on("/getData", sendData);
     server.on("/saveContent", saveContent);
     server.on("/restart", restart);
+    server.on("/getSensorsData", getSensorsData);
     //WEB
 
     //PINS
@@ -244,15 +246,10 @@ void loop() {
     }
 
     // GET SENSORS
-    if ((second % 10 == 0) and (secFr == 0)) {
+    if ((second % 3 == 0) and (secFr == 0)) {
         // water temp
         sensors.requestTemperatures();
         waterTemp = sensors.getTempCByIndex(0);
-
-        printTime();
-        DEBUG("Water temp is: ");
-        DEBUG(waterTemp);
-
 
         //pH
 
@@ -461,7 +458,7 @@ void sendData() {
     json += "\"}";
 
     server.send (200, "text/json", json);
-    Serial.println(json);
+    DEBUG(json);
 }
 
  void saveContent() {
@@ -492,6 +489,18 @@ void restart() {
     server.send(200, "text/json", "");
     delay(100);
     ESP.restart();
+}
+
+void getSensorsData() {
+    String json = "{";
+    //wifi
+    json += "\"temp\":\"";
+    json += waterTemp;
+
+
+    json += "\"}";
+
+    server.send (200, "text/json", json);
 }
 
 /*
@@ -791,60 +800,14 @@ void updateTime() {
   second = epoch % 60;
 }
 
+
 /*
-..######...########.########....##......##....###....########.########.########.....########.########.##.....##.########.
-.##....##..##..........##.......##..##..##...##.##......##....##.......##.....##.......##....##.......###...###.##.....##
-.##........##..........##.......##..##..##..##...##.....##....##.......##.....##.......##....##.......####.####.##.....##
-.##...####.######......##.......##..##..##.##.....##....##....######...########........##....######...##.###.##.########.
-.##....##..##..........##.......##..##..##.#########....##....##.......##...##.........##....##.......##.....##.##.......
-.##....##..##..........##.......##..##..##.##.....##....##....##.......##....##........##....##.......##.....##.##.......
-..######...########....##........###..###..##.....##....##....########.##.....##.......##....########.##.....##.##.......
+.########.##....##.########.
+.##.......###...##.##.....##
+.##.......####..##.##.....##
+.######...##.##.##.##.....##
+.##.......##..####.##.....##
+.##.......##...###.##.....##
+.########.##....##.########.
 */
-void getTemp() {
-
-
-
-
-
-}
-
-
-
-
-
-// void fishFeeding() {
-// 	// if (not alarmNow)
-// 	// {
-// 		if (waitFeedEnd == true)
-// 		{
-// 			DEBUG("Fish feeding! > ");
-// 			// alarm(signal.START_FEEDING);
-// 			digitalWrite(PIN_FEEDING, HIGH);  //startFeeding
-// 			waitFeedEnd = false;
-
-// 			delay(2000);
-// 			while ((digitalRead(PIN_FEEDLIMIT) == HIGH) and (waitFeedEnd == false))
-// 			{
-// 		    	//Wait until rotate
-//                 DEBUG("wait rotate");
-// 			}
-// 			digitalWrite(PIN_FEEDING, LOW);   //stop
-//             currMode = NOTHING;
-
-
-// 			// startFeeding = false;
-// 			// alarm(signal.END_OPERATION);
-// 		}
-// 	// }
-// }
-
-
-// void testFunc() {
-
-//     currMode = FEEDFISH;            // time for fish feed
-
-//     printTime();
-//     DEBUG("FISH FEEDING");
-// }
-
 //END.

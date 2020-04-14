@@ -68,7 +68,7 @@ int currMode = 0;
 enum Errors {NOERRORS, WATERLEVEL, TEMPERATURE, PH, EDC};
 
 boolean waitFeedEnd = false;                // for fish feed flag
-float waterTemp = 85;                       // water temp
+int waterTemp = 85;                       // water temp
 
 
 
