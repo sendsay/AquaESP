@@ -70,6 +70,10 @@ enum Errors {NOERRORS, WATERLEVEL, TEMPERATURE, PH, EDC};
 boolean waitFeedEnd = false;                // for fish feed flag
 int waterTemp = 85;                       // water temp
 
+int pHArray[40];   //Store the average value of the sensor feedback
+int pHArrayIndex=0;
+static float pHValue, voltage;
+#define Offset 0         //deviation compensate
 
 
 //END.

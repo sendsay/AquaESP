@@ -81,9 +81,17 @@ function getSensorsData() {
             temp = json.temp;
             calc = (440 - (440 * temp) / 30);
             $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
-            document.getElementById("temp").innerHTML = temp + " <span>°C</span>";
+            document.getElementById("temp").innerHTML = temp + "<span> °C</span>";
 
             // pH
+            pHValue = json.pHValue;
+            calc = (440 - (440 * pHValue) / 10);
+            $(".box:nth-child(2) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+            document.getElementById("pH").innerHTML = pHValue + "<span> pH</span>";
+
+
+
+
 
 
             // EDC

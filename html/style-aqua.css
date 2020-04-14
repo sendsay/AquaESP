@@ -144,18 +144,17 @@ svg circle:nth-child(2) {
 }
 
 .box:nth-child(1) svg circle:nth-child(2) {
-    /* stroke-dashoffset: calc(440 - (440 * 24) / 30); */
-    stroke-dashoffset: 48;
+    stroke-dashoffset: calc(440 - (440 * 14) / 30);
     stroke: #ebfc00;
 }
 
 .box:nth-child(2) svg circle:nth-child(2) {
-    stroke-dashoffset: calc(440 - (440 * 7.2) / 10);
+    stroke-dashoffset: calc(440 - (440 * 3.0) / 10);
     stroke: #1dfc00;
 }
 
 .box:nth-child(3) svg circle:nth-child(2) {
-    stroke-dashoffset: calc(440 - (440 * 876) / 1200);
+    stroke-dashoffset: calc(440 - (440 * 500) / 1200);
     stroke: #0414fd;
 }
 
