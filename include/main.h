@@ -55,6 +55,9 @@ struct Config {
     int summerTime = 0;
 
     int feedTime = 7;    // hour for fish feeding
+    float offsetPh = 0.0; //offset pH sensor data
+    float upEdgePh = 0.0; //up edge pH sensor 
+    float dnEdgePh = 0.0; //down edge pH sensor 
 };
 
 const char* fileConfigName = "/config.txt";
@@ -71,9 +74,9 @@ boolean waitFeedEnd = false;                // for fish feed flag
 int waterTemp = 85;                       // water temp
 
 int pHArray[40];   //Store the average value of the sensor feedback
-int pHArrayIndex=0;
+int pHArrayIndex=0; 
 static float pHValue, voltage;
-#define Offset 0         //deviation compensate
+float Offset = 0;         //deviation compensate
 
 
 //END.

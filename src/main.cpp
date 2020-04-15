@@ -251,7 +251,8 @@ void loop() {
 
 
     // GET SENSORS
-    if ((second % 3 == 0) and (secFr == 0)) {
+    // if ((second % 1 == 0) and (secFr == 0)) {
+    if (secFr == 0) {
         // water temp
         sensors.requestTemperatures();
         waterTemp = sensors.getTempCByIndex(0);
@@ -260,8 +261,13 @@ void loop() {
         pHArray[pHArrayIndex++] = analogRead(A0);
         if(pHArrayIndex == 40) pHArrayIndex = 0;
         voltage = avergearray(pHArray, 40) * 3.3 / 1024;
-        pHValue = 6.0 * voltage + Offset;
+        pHValue = 3.5 * voltage + config.offsetPh;
 
+
+
+        DEBUG("");
+        DEBUG(voltage);
+        DEBUG(pHValue);
         //EDC
 
 
@@ -460,6 +466,12 @@ void sendData() {
     //Aqua
     json += "\",\"feedTime\":\"";
     json += config.feedTime;
+    json += "\",\"offsetPh\":\"";
+    json += config.offsetPh;
+    json += "\",\"upEdgePh\":\"";
+    json += config.upEdgePh;
+    json += "\",\"dnEdgePh\":\"";
+    json += config.dnEdgePh;
 
 
     //TODO: Add sending data to web here!
@@ -489,6 +501,9 @@ void sendData() {
 
     //Aqua
     config.feedTime = server.arg("feedTime").toInt();
+    config.offsetPh = server.arg("offsetPh").toFloat();
+    config.upEdgePh = server.arg("upEdgePh").toFloat();
+    config.dnEdgePh = server.arg("dnEdgePh").toFloat();
 
 
     saveConfig(fileConfigName, config);
@@ -716,6 +731,9 @@ void loadConfiguration(const char *filename, Config &config) {
 
     //Aqua
     config.feedTime = doc["feedTime"] | 7;
+    config.offsetPh = doc["offsetPh"] | 0.0;
+    config.upEdgePh = doc["upEdgePh"] | 0.0;
+    config.dnEdgePh = doc["dnEdgePh"] | 0.0;
 
 
     // TODO: Add all parameters for loading
@@ -760,6 +778,9 @@ void saveConfig(const char *filename, Config &config) {
     doc["summertime"] = config.summerTime;
     doc["ntpServerName"] = config.ntpServerName;
     doc["feedTime"] = config.feedTime;
+    doc["offsetPh"] = config.offsetPh;
+    doc["upEdgePh"] = config.upEdgePh;
+    doc["dnEdgePh"] = config.dnEdgePh;
 
     //TODO: Add all params for saving
 

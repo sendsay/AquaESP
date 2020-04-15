@@ -1,6 +1,6 @@
 var xmlHttp = new XMLHttpRequest();
 
-setInterval(getSensorsData, 3000);
+setInterval(getSensorsData, 1000);
 
 function getData() {
 
@@ -28,6 +28,9 @@ function getData() {
 
             //aqua
             document.getElementById("feedTime").value = json.feedTime;
+            document.getElementById("offsetPh").value = json.offsetPh;
+            document.getElementById("upEdgePh").value = json.upEdge;
+            document.getElementById("dnEdgePh").value = json.dnEdge;
 
 
             console.log(str);
@@ -56,7 +59,8 @@ function restartButton() {
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
-                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime')
+                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') + 
+                    "&offsetPh=" + val('offsetPh') + "&upEdge=" + val('upEdge') + "&dnEdge=" + val('dnEdge')
                     ;
 
     console.log("************* send to server ");
