@@ -65,6 +65,17 @@ struct Config {
 const char* fileConfigName = "/config.txt";
 // Config structure
 
+// Alarm codes structure
+struct AlarmCodes
+{
+    const byte NO_ALARM = 0;
+    const byte WATER_LOW = 1;
+    const byte TEMP = 2;
+    const byte PH = 4;
+    const byte TDS = 8;
+};
+// Alarm codes structure
+
 // Modes
 enum Modes {NOTHING, CHECKSENSORS, FEEDFISH, ALARM};
 int currMode = 0;
@@ -80,7 +91,11 @@ int pHArrayIndex=0;
 static float pHValue, voltage;
 float Offset = 0;         //deviation compensate
 
-boolean alarmSignal = false;
+byte alarmCode = 0;       // alarm code to send on page
+boolean alarmFlag = false;  // alarm flag
+boolean alarmSignal = false; // alarm signal
+
+
 
 
 //END.

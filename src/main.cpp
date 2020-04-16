@@ -66,6 +66,7 @@ IPAddress timeServerIP;                 // server IP adress
 Config config;                          // config structure
 OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
 DallasTemperature sensors(&oneWire);    // aqua temp probe
+AlarmCodes alarm;                       // alarm codes;
 
 
 /*
@@ -261,18 +262,105 @@ void loop() {
         pHValue = 3.5 * voltage + config.offsetPh;
 
 
+        // DEBUG("low temp:");
+        // DEBUG(config.dnEdgeTemp);
+        // DEBUG("high temp:");
+        // DEBUG(config.upEdgeTemp); 
+        // DEBUG("curr temp");
+        // DEBUG(waterTemp);         
+            
+        // DEBUG("");
+        // DEBUG(voltage);
+        // DEBUG(pHValue);
+        // DEBUG("");
 
-        DEBUG("");
-        DEBUG(voltage);
-        DEBUG(pHValue);
-        //EDC
+
+        //TDS
 
 
         // limits for errors
-        if ((waterTemp < config.dnEdgeTemp) and (waterTemp > config.upEdgeTemp))
-        {
-            alarmSignal = true;
+
+        //ph Level
+        // if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
+        //     alarmCode = alarmCode | alarm.PH;
+ 
+        // }
+
+        if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
+            alarmCode = alarmCode | alarm.TEMP;
+            DEBUG("llll");
         }
+
+        if (secFr == 0) {
+            alarmCode = alarmCode | alarm.TEMP;
+            alarmCode = alarmCode | alarm.PH;
+            DEBUG(alarmCode);
+            DEBUG(waterTemp);
+            DEBUG(config.dnEdgeTemp);
+            DEBUG(config.upEdgeTemp);
+
+
+
+            DEBUG("");
+        } 
+
+        //Ph level
+        // if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
+        //     alarmCode = alarmCode | alarm.PH;
+        //     alarmFlag = true;
+        //       if ((secFr == 0) and (second % 10 == 0)) {
+        //         printTime();
+        //         DEBUG(">>> Check pH!!!");
+        //         DEBUG("low pH:");
+        //         DEBUG(config.dnEdgePh);
+        //         DEBUG("high pH:");
+        //         DEBUG(config.upEdgePh); 
+        //         DEBUG("curr pH");
+        //         DEBUG(pHValue);   
+        //         DEBUG("alarm code:");
+        //         DEBUG(alarmCode);
+        //     } 
+        // } else {
+        //     alarmCode = alarmCode | alarm.NO_ALARM;
+        //     if (alarmCode == 0) {
+        //         alarmFlag = false;
+        //     }
+        // }
+
+
+        // // temp
+        // if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
+        //     alarmCode = alarmCode | alarm.TEMP;
+        //     alarmFlag = true;
+        //       if ((secFr == 0) and (second % 10 == 0)) {
+        //         printTime();
+        //         DEBUG(">>> Check temperature!!!");
+        //         DEBUG("low temp:");
+        //         DEBUG(config.dnEdgeTemp);
+        //         DEBUG("high temp:");
+        //         DEBUG(config.upEdgeTemp); 
+        //         DEBUG("curr temp");
+        //         DEBUG(waterTemp);   
+        //         DEBUG("alarm code:");
+        //         DEBUG(alarmCode);
+        //     } 
+        // } else {
+        //     alarmCode = alarmCode | alarm.NO_ALARM;
+        //     if (alarmCode == 0) {
+        //         alarmFlag = false;
+        //     }
+        // }
+
+
+        if ((alarmFlag) and (minute % 10 == 0)) {
+            if (secFr == 0) {
+                alarmSignal = not alarmSignal;
+                digitalWrite(PIN_BEEPER, alarmSignal);         
+            }        
+            
+        }
+   
+        
         
 
 
@@ -711,7 +799,7 @@ void loadConfiguration(const char *filename, Config &config) {
     File file = SPIFFS.open("/config.txt", "r");
 
 
-    const size_t capacity = JSON_OBJECT_SIZE(7) + 200;
+    const size_t capacity = JSON_OBJECT_SIZE(7) + 300;
     DynamicJsonDocument doc(capacity);
 
     DeserializationError error = deserializeJson(doc, file);
