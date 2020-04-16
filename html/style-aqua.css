@@ -218,3 +218,9 @@ svg circle:nth-child(2) {
 .btn:hover:after {
     top: 0;
 }
+
+.alarm {
+    -webkit-box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
+    -moz-box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
+    box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
+}

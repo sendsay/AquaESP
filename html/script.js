@@ -1,5 +1,11 @@
 var xmlHttp = new XMLHttpRequest();
 
+var NO_ALARM = 0;
+var WATER_LOW = 1;
+var TEMP = 2;
+var PH = 4;
+var TDS = 8;
+
 setInterval(getSensorsData, 1000);
 
 function getData() {
@@ -34,7 +40,6 @@ function getData() {
             document.getElementById("upEdgeTemp").value = json.upEdgeTemp;
             document.getElementById("dnEdgeTemp").value = json.dnEdgeTemp;
 
-
             console.log(str);
         }
     }
@@ -61,13 +66,10 @@ function restartButton() {
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
-                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') + 
+                    "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') +
                     "&offsetPh=" + val('offsetPh') + "&upEdgePh=" + val('upEdgePh') + "&dnEdgePh=" + val('dnEdgePh') +
                     "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp')
-
-
                     ;
-
     console.log("************* send to server ");
     console.log(content);
 
@@ -85,7 +87,6 @@ function getSensorsData() {
 
             json=JSON.parse(str);
 
-
             // temperature
             temp = json.temp;
             calc = (440 - (440 * temp) / 30);
@@ -98,15 +99,31 @@ function getSensorsData() {
             $(".box:nth-child(2) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("pH").innerHTML = pHValue + "<span> pH</span>";
 
-
-
-
-
-
             // EDC
 
 
-            console.log(json);
+            // ALARMS
+
+            // temp
+            if (json.alarmCode & TEMP) {
+                $(".temp").addClass("alarm");
+            } else {
+                $(".temp").removeClass("alarm");
+            }
+
+            // ph
+            if (json.alarmCode & PH) {
+                $(".ph").addClass("alarm");
+            } else {
+                $(".ph").removeClass("alarm");
+            }
+
+            //tds
+            if (json.alarmCode & TDS) {
+                $(".tds").addClass("alarm");
+            } else {
+                $(".tds").removeClass("alarm");
+            }
         }
     }
 }

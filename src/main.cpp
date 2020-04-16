@@ -261,113 +261,36 @@ void loop() {
         voltage = avergearray(pHArray, 40) * 3.3 / 1024;
         pHValue = 3.5 * voltage + config.offsetPh;
 
-
-        // DEBUG("low temp:");
-        // DEBUG(config.dnEdgeTemp);
-        // DEBUG("high temp:");
-        // DEBUG(config.upEdgeTemp); 
-        // DEBUG("curr temp");
-        // DEBUG(waterTemp);         
-            
-        // DEBUG("");
-        // DEBUG(voltage);
-        // DEBUG(pHValue);
-        // DEBUG("");
-
-
         //TDS
 
 
-        // limits for errors
+        // CHECK LIMITS
+        // water level
 
-        //ph Level
-        // if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
-        //     alarmCode = alarmCode | alarm.PH;
- 
-        // }
 
+
+        // temp
         if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
             alarmCode = alarmCode | alarm.TEMP;
-            DEBUG("llll");
+        } else {
+            alarmCode = alarmCode &= ~alarm.TEMP;
         }
 
-        if (secFr == 0) {
-            alarmCode = alarmCode | alarm.TEMP;
+        // pH
+        if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
             alarmCode = alarmCode | alarm.PH;
-            DEBUG(alarmCode);
-            DEBUG(waterTemp);
-            DEBUG(config.dnEdgeTemp);
-            DEBUG(config.upEdgeTemp);
-
-
-
-            DEBUG("");
-        } 
-
-        //Ph level
-        // if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
-        //     alarmCode = alarmCode | alarm.PH;
-        //     alarmFlag = true;
-        //       if ((secFr == 0) and (second % 10 == 0)) {
-        //         printTime();
-        //         DEBUG(">>> Check pH!!!");
-        //         DEBUG("low pH:");
-        //         DEBUG(config.dnEdgePh);
-        //         DEBUG("high pH:");
-        //         DEBUG(config.upEdgePh); 
-        //         DEBUG("curr pH");
-        //         DEBUG(pHValue);   
-        //         DEBUG("alarm code:");
-        //         DEBUG(alarmCode);
-        //     } 
-        // } else {
-        //     alarmCode = alarmCode | alarm.NO_ALARM;
-        //     if (alarmCode == 0) {
-        //         alarmFlag = false;
-        //     }
-        // }
-
-
-        // // temp
-        // if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
-        //     alarmCode = alarmCode | alarm.TEMP;
-        //     alarmFlag = true;
-        //       if ((secFr == 0) and (second % 10 == 0)) {
-        //         printTime();
-        //         DEBUG(">>> Check temperature!!!");
-        //         DEBUG("low temp:");
-        //         DEBUG(config.dnEdgeTemp);
-        //         DEBUG("high temp:");
-        //         DEBUG(config.upEdgeTemp); 
-        //         DEBUG("curr temp");
-        //         DEBUG(waterTemp);   
-        //         DEBUG("alarm code:");
-        //         DEBUG(alarmCode);
-        //     } 
-        // } else {
-        //     alarmCode = alarmCode | alarm.NO_ALARM;
-        //     if (alarmCode == 0) {
-        //         alarmFlag = false;
-        //     }
-        // }
-
-
-        if ((alarmFlag) and (minute % 10 == 0)) {
-            if (secFr == 0) {
-                alarmSignal = not alarmSignal;
-                digitalWrite(PIN_BEEPER, alarmSignal);         
-            }        
-            
+        } else {
+            alarmCode = alarmCode &= ~alarm.PH;
         }
-   
-        
-        
 
-
-
-
+        // signal
+        if ((alarmCode != 0) and (minute % 10 == 0) and (second < 30)) {
+            alarmSignal = not alarmSignal;
+            digitalWrite(PIN_BEEPER, alarmSignal);
+        } else {
+            digitalWrite(PIN_BEEPER, LOW);
+        }
     }
-
 
 }//LOOP
 
@@ -616,14 +539,18 @@ void restart() {
 
 void getSensorsData() {
     String json = "{";
-    //wifi
-    json += "\"temp\":\"";
+    //alarm code
+    json += "\"alarmCode\":\"";
+    json += alarmCode;
+    //temp
+    json += "\",\"temp\":\"";
     json += waterTemp;
     //pH
     json += "\",\"pHValue\":\"";
     json += pHValue;
 
-    //EDC
+    //TDS
+
 
 
     json += "\"}";
@@ -799,7 +726,7 @@ void loadConfiguration(const char *filename, Config &config) {
     File file = SPIFFS.open("/config.txt", "r");
 
 
-    const size_t capacity = JSON_OBJECT_SIZE(7) + 300;
+    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
     DynamicJsonDocument doc(capacity);
 
     DeserializationError error = deserializeJson(doc, file);
