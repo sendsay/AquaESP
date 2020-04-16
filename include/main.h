@@ -54,10 +54,12 @@ struct Config {
     char ntpServerName[50] = "ntp3.time.in.ua";
     int summerTime = 0;
 
-    int feedTime = 7;    // hour for fish feeding
-    float offsetPh = 0.0; //offset pH sensor data
-    float upEdgePh = 0.0; //up edge pH sensor 
-    float dnEdgePh = 0.0; //down edge pH sensor 
+    int feedTime = 7;       // hour for fish feeding
+    float offsetPh = 1.4;   // offset pH sensor data
+    float upEdgePh = 8.5;   // up edge pH sensor 
+    float dnEdgePh = 6.8;   // down edge pH sensor 
+    int upEdgeTemp = 28;    // up edge temp sensor 
+    int dnEdgeTemp = 22;    // down edge temp sensor 
 };
 
 const char* fileConfigName = "/config.txt";
@@ -77,6 +79,8 @@ int pHArray[40];   //Store the average value of the sensor feedback
 int pHArrayIndex=0; 
 static float pHValue, voltage;
 float Offset = 0;         //deviation compensate
+
+boolean alarmSignal = false;
 
 
 //END.

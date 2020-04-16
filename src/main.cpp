@@ -246,9 +246,6 @@ void loop() {
         break;
     }
 
-    // get pH data
-
-
 
     // GET SENSORS
     // if ((second % 1 == 0) and (secFr == 0)) {
@@ -269,6 +266,15 @@ void loop() {
         DEBUG(voltage);
         DEBUG(pHValue);
         //EDC
+
+
+        // limits for errors
+        if ((waterTemp < config.dnEdgeTemp) and (waterTemp > config.upEdgeTemp))
+        {
+            alarmSignal = true;
+        }
+        
+
 
 
 
@@ -472,6 +478,10 @@ void sendData() {
     json += config.upEdgePh;
     json += "\",\"dnEdgePh\":\"";
     json += config.dnEdgePh;
+    json += "\",\"upEdgeTemp\":\"";
+    json += config.upEdgeTemp;
+    json += "\",\"dnEdgeTemp\":\"";
+    json += config.dnEdgeTemp;
 
 
     //TODO: Add sending data to web here!
@@ -504,7 +514,8 @@ void sendData() {
     config.offsetPh = server.arg("offsetPh").toFloat();
     config.upEdgePh = server.arg("upEdgePh").toFloat();
     config.dnEdgePh = server.arg("dnEdgePh").toFloat();
-
+    config.upEdgeTemp = server.arg("upEdgeTemp").toInt();
+    config.dnEdgeTemp = server.arg("dnEdgeTemp").toInt();
 
     saveConfig(fileConfigName, config);
 }
@@ -731,9 +742,11 @@ void loadConfiguration(const char *filename, Config &config) {
 
     //Aqua
     config.feedTime = doc["feedTime"] | 7;
-    config.offsetPh = doc["offsetPh"] | 0.0;
-    config.upEdgePh = doc["upEdgePh"] | 0.0;
-    config.dnEdgePh = doc["dnEdgePh"] | 0.0;
+    config.offsetPh = doc["offsetPh"] | 0;
+    config.upEdgePh = doc["upEdgePh"] | 8.2;
+    config.dnEdgePh = doc["dnEdgePh"] | 6.8;
+    config.upEdgeTemp = doc["upEdgeTemp"] | 28;
+    config.dnEdgeTemp = doc["dnEdgeTemp"] | 24;
 
 
     // TODO: Add all parameters for loading
@@ -781,6 +794,8 @@ void saveConfig(const char *filename, Config &config) {
     doc["offsetPh"] = config.offsetPh;
     doc["upEdgePh"] = config.upEdgePh;
     doc["dnEdgePh"] = config.dnEdgePh;
+    doc["upEdgeTemp"] = config.upEdgeTemp;
+    doc["dnEdgeTemp"] = config.dnEdgeTemp;
 
     //TODO: Add all params for saving
 

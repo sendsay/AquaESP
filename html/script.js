@@ -29,8 +29,10 @@ function getData() {
             //aqua
             document.getElementById("feedTime").value = json.feedTime;
             document.getElementById("offsetPh").value = json.offsetPh;
-            document.getElementById("upEdgePh").value = json.upEdge;
-            document.getElementById("dnEdgePh").value = json.dnEdge;
+            document.getElementById("upEdgePh").value = json.upEdgePh;
+            document.getElementById("dnEdgePh").value = json.dnEdgePh;
+            document.getElementById("upEdgeTemp").value = json.upEdgeTemp;
+            document.getElementById("dnEdgeTemp").value = json.dnEdgeTemp;
 
 
             console.log(str);
@@ -60,7 +62,10 @@ function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
                     "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') + 
-                    "&offsetPh=" + val('offsetPh') + "&upEdge=" + val('upEdge') + "&dnEdge=" + val('dnEdge')
+                    "&offsetPh=" + val('offsetPh') + "&upEdgePh=" + val('upEdgePh') + "&dnEdgePh=" + val('dnEdgePh') +
+                    "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp')
+
+
                     ;
 
     console.log("************* send to server ");
