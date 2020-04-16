@@ -33,6 +33,8 @@ void styleparams();                     // web style params css
 void aquapng();                         // web aqua png
 void lightpng();                        // web light png
 void parampng();                        // web param png
+void script();                          // web script js
+void script_params();                   // web script  param js
 void printTime();                       // print time for debug
 void timeUpdateNTP();                   // update time from iNet
 void getNTPtime();                      // get time from server
@@ -43,7 +45,6 @@ void updateTime();                      // update time, work clock!
 void sendData();                        // send data to web
 void restart();                         // restart controller
 void saveContent();                     // save web content
-void script();                          // web script js
 void getTemp();                         // get water temp timer func
 void getSensorsData();                  // get and send sensors data
 void feedFish();                        // manual feed fish
@@ -128,6 +129,8 @@ void setup() {
     server.on("/params.png", parampng);
     server.on("script.js", script);
     server.on("/script.js", script);
+    server.on("script_params.js", script_params);
+    server.on("/script_params.js", script_params);
 
 
     server.on("/getData", sendData);
@@ -453,6 +456,11 @@ void parampng() {
 
 void script() {
     File file = SPIFFS.open("/script.js.gz", "r");
+    size_t sent = server.streamFile(file, "application/javascript");
+}
+
+void script_params() {
+    File file = SPIFFS.open("/script_params.js.gz", "r");
     size_t sent = server.streamFile(file, "application/javascript");
 }
 
