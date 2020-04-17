@@ -49,7 +49,10 @@ void getTemp();                         // get water temp timer func
 void getSensorsData();                  // get and send sensors data
 void feedFish();                        // manual feed fish
 double avergearray(int* arr, int number);  //average array for pH meter
-
+void shutOffSignal();                   // shut off alarm signal 
+void beepTime();                        // beep time when alarm
+void beepDelayTime();                   // beep delay timer when alarm
+void beepLongDelayTime();               // beep LONG delay timer when alarm
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -68,7 +71,11 @@ Config config;                          // config structure
 OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
 DallasTemperature sensors(&oneWire);    // aqua temp probe
 AlarmCodes alarm;                       // alarm codes;
-
+Ticker beepTimer(beepTime, 4000, MILLIS);              // beep timer when alarm
+// Ticker beepDelayTimer(beepDelayTime, 9000UL, MILLIS);    //beep delay timer when alarm
+// Ticker beepLongDelayTimer(beepLongDelayTime, 10800UL, MILLIS);   //beep LONG delay timer when alarm
+Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm
+Ticker beepLongDelayTimer(beepLongDelayTime, 10800000UL, MILLIS);   //beep LONG delay timer when alarm
 
 /*
 ..######..########.########.##.....##.########.
@@ -129,8 +136,8 @@ void setup() {
     server.on("/params.png", parampng);
     server.on("script.js", script);
     server.on("/script.js", script);
-    server.on("script_params.js", script_params);
-    server.on("/script_params.js", script_params);
+    server.on("script-params.js", script_params);
+    server.on("/script-params.js", script_params);
 
 
     server.on("/getData", sendData);
@@ -138,6 +145,7 @@ void setup() {
     server.on("/restart", restart);
     server.on("/getSensorsData", getSensorsData);
     server.on("/feedFish", feedFish);
+    server.on("/shutOffSignal", shutOffSignal);
     //WEB
 
     //PINS
@@ -164,6 +172,11 @@ void loop() {
 
 // WEB SERVER
     server.handleClient();
+
+// BEEP TIMER
+    beepTimer.update();
+    beepDelayTimer.update();
+    beepLongDelayTimer.update();
 
 // WORK WITH TIME
     if(second != lastSecond) {
@@ -287,12 +300,32 @@ void loop() {
         }
 
         // signal
-        if ((alarmCode != 0) and (minute % 10 == 0) and (second < 30)) {
+        if (alarmCode != 0) {            
+            while (alarmFlag2 == false) {   // doing once
+                alarmFlag = true;
+                beepTimer.start();
+                // beepDelayTimer.stop();
+                alarmFlag2 = true;
+                printTime();
+                DEBUG("ONCE");
+            }
+            
+        } else {
+            alarmFlag = false;
+            beepTimer.stop();   // beep timer    
+            beepDelayTimer.stop();  
+            printTime();  
+            DEBUG("STOP");
+        }
+
+        if ((alarmFlag == true) and (alarmFlag3 == false)) {
             alarmSignal = not alarmSignal;
             digitalWrite(PIN_BEEPER, alarmSignal);
+            DEBUG("BEEP");
         } else {
             digitalWrite(PIN_BEEPER, LOW);
         }
+
     }
 
 }//LOOP
@@ -460,7 +493,7 @@ void script() {
 }
 
 void script_params() {
-    File file = SPIFFS.open("/script_params.js.gz", "r");
+    File file = SPIFFS.open("/script-params.js.gz", "r");
     size_t sent = server.streamFile(file, "application/javascript");
 }
 
@@ -536,11 +569,15 @@ void sendData() {
     config.upEdgeTemp = server.arg("upEdgeTemp").toInt();
     config.dnEdgeTemp = server.arg("dnEdgeTemp").toInt();
 
+    // server.send(200, "text/json", "{\"Response\":\"OK\"}");
+
     saveConfig(fileConfigName, config);
+    
+
 }
 
 void restart() {
-    server.send(200, "text/json", "");
+    server.send(200, "text/json", "OK");
     delay(100);
     ESP.restart();
 }
@@ -569,6 +606,18 @@ void getSensorsData() {
 void feedFish() {
     currMode = FEEDFISH;            // time for fish feed
     waitFeedEnd = true;             // flag limit up
+}
+
+void shutOffSignal() {
+    beepTimer.stop();               // beep timer    
+    beepDelayTimer.stop();          // beep delay timer
+    alarmFlag3 = true;
+    beepLongDelayTimer.start();
+    alarmFlag2 = true;
+    
+
+    DEBUG("SHUT OFF BUTTON");
+    server.send(200, "text/json", "{\"Response\":\"OK\"}");
 }
 
 /*
@@ -928,6 +977,24 @@ double avergearray(int* arr, int number){
   return avg;
 }
 
+void beepTime() {;
+    alarmFlag = false;
+    DEBUG("BEEP TIMER");
+    printTime();
+    beepDelayTimer.start();
+}
+
+void beepDelayTime() {
+    alarmFlag2 = false;
+    printTime();
+    DEBUG("DELAY TIMER");
+}
+
+void beepLongDelayTime() {
+    alarmFlag2 = false;
+    alarmFlag3 = false;
+    DEBUG("LONG DELAY TIMER");
+}
 
 /*
 .########.##....##.########.

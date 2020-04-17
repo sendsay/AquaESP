@@ -58,11 +58,6 @@ if (switchOn.checked){
 return 0;
 }
 
-function restartButton() {
-    xmlHttp.open("GET", "/restart", true);
-    xmlHttp.send();
-}
-
 function saveButton() {
     var content = "/saveContent?ssid=" + val('ssid') + "&password=" + val('password') + "&ssidAP=" + val('ssidAP') +
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
@@ -124,12 +119,24 @@ function getSensorsData() {
             } else {
                 $(".tds").removeClass("alarm");
             }
+
+            if (json.alarmCode != 0) {
+                $("#signalOff").removeClass("signalOff");
+            } else {
+                $("#signalOff").addClass("signalOff");
+            }
+
         }
     }
 }
 
 function feedButton() {
     xmlHttp.open("GET", "/feedFish", true);
+    xmlHttp.send();
+}
+
+function shutOffSignal() {
+    xmlHttp.open("GET", "/shutOffSignal", true);
     xmlHttp.send();
 }
 

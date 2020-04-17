@@ -296,7 +296,7 @@
                 <h4>В каком часу кормить рыб? :</h4>
             </div>
             <div class="col text-left">
-                <input id="feedTime" type="number" class="css-input" title="" pattern="[0-9. ]{1,2}" min="0" max="23" placeholder="7">
+                <input id="feedTime" type="text" class="css-input" title="" pattern="[0-9. ]{1,2}" min="0" max="23" placeholder="7">
             </div>
         </div>
         <div class="row paramrow">
@@ -304,7 +304,7 @@
                 <h4>Смещение датчика рН :</h4>
             </div>
             <div class="col text-left">
-                <input id="offsetPh" type="number" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder="1.5">
+                <input id="offsetPh" type="text" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder="1.5">
             </div>
         </div>
         <div class="row paramrow">
@@ -312,7 +312,7 @@
                 <h4>Верхний порог рН :</h4>
             </div>
             <div class="col text-left">
-                <input id="upEdgePh" type="number" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder=8.2>
+                <input id="upEdgePh" type="text" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder=8.2>
             </div>
         </div>
         <div class="row paramrow">
@@ -320,7 +320,7 @@
                 <h4>Нижний порог рН:</h4>
             </div>
             <div class="col text-left">
-                <input id="dnEdgePh" type="number" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder="6.8">
+                <input id="dnEdgePh" type="text" class="css-input" title="" pattern="[0-9. ]{2,2}" min="-100" max="100" placeholder="6.8">
             </div>
         </div>
         <div class="row paramrow">
@@ -328,7 +328,7 @@
                 <h4>Верхний порог температуры :</h4>
             </div>
             <div class="col text-left">
-                <input id="upEdgeTemp" type="number" class="css-input" title="" pattern="[0-9. ]{2}" min="0" max="30" placeholder=28>
+                <input id="upEdgeTemp" type="text" class="css-input" title="" pattern="[0-9. ]{2}" min="0" max="30" placeholder=28>
             </div>
         </div>
         <div class="row paramrow">
@@ -336,7 +336,7 @@
                 <h4>Нижний порог температуры :</h4>
             </div>
             <div class="col text-left">
-                <input id="dnEdgeTemp" type="number" class="css-input" title="" pattern="[0-9. ]{2}" min="0" max="30" placeholder="25">
+                <input id="dnEdgeTemp" type="text" class="css-input" title="" pattern="[0-9. ]{2}" min="0" max="30" placeholder="25">
             </div>
         </div>
 
@@ -361,6 +361,6 @@
         </div>
     </div>
 
-    <script src="script_params.js"></script>
+    <script src="script-params.js"></script>
 </body>
 </html>

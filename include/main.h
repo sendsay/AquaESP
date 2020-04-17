@@ -93,7 +93,10 @@ float Offset = 0;         //deviation compensate
 
 byte alarmCode = 0;       // alarm code to send on page
 boolean alarmFlag = false;  // alarm flag
+boolean alarmFlag2 = false;  // alarm flag 2
+boolean alarmFlag3 = false;  // alarm flag 3
 boolean alarmSignal = false; // alarm signal
+
 
 
 
