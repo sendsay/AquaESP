@@ -224,18 +224,17 @@ svg circle:nth-child(2) {
     -moz-box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
     box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
 }
-
 .signalOff, .waterLow {
     display: none;
 }
 
 .btnSignalOff {
-    background: red;
+    background:    linear-gradient(0deg, #f00606, rgb(148, 4, 4));
     color: white;
     margin: 20px 0px;
 }
 
 .msg {
-    background: red;
+    background-color: linear-gradient(0deg, #f00606, rgb(148, 4, 4));
     color: white;
 }

@@ -99,6 +99,16 @@ function getSensorsData() {
 
             // ALARMS
 
+            //water low
+            if (json.alarmCode & WATER_LOW) {
+                $(".msg").removeClass("waterLow");
+                console.log("OK");
+            } else {
+                $(".msg").addClass("waterLow");
+                console.log("OK22");
+
+            }
+
             // temp
             if (json.alarmCode & TEMP) {
                 $(".temp").addClass("alarm");

@@ -15,6 +15,7 @@
 #define PIN_FEEDLIMIT D0                    // Pin feed mechanism limit
 #define PIN_BEEPER D5                       // Pin buzzer
 #define ONE_WIRE_BUS D1                     // Aqua temp port adress
+#define PIN_WATERLOW D7                     // Water low
 
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ
@@ -56,10 +57,10 @@ struct Config {
 
     int feedTime = 7;       // hour for fish feeding
     float offsetPh = 1.4;   // offset pH sensor data
-    float upEdgePh = 8.5;   // up edge pH sensor 
-    float dnEdgePh = 6.8;   // down edge pH sensor 
-    int upEdgeTemp = 28;    // up edge temp sensor 
-    int dnEdgeTemp = 22;    // down edge temp sensor 
+    float upEdgePh = 8.5;   // up edge pH sensor
+    float dnEdgePh = 6.8;   // down edge pH sensor
+    int upEdgeTemp = 28;    // up edge temp sensor
+    int dnEdgeTemp = 22;    // down edge temp sensor
 };
 
 const char* fileConfigName = "/config.txt";
@@ -87,7 +88,7 @@ boolean waitFeedEnd = false;                // for fish feed flag
 int waterTemp = 85;                       // water temp
 
 int pHArray[40];   //Store the average value of the sensor feedback
-int pHArrayIndex=0; 
+int pHArrayIndex=0;
 static float pHValue, voltage;
 float Offset = 0;         //deviation compensate
 

@@ -49,7 +49,7 @@ void getTemp();                         // get water temp timer func
 void getSensorsData();                  // get and send sensors data
 void feedFish();                        // manual feed fish
 double avergearray(int* arr, int number);  //average array for pH meter
-void shutOffSignal();                   // shut off alarm signal 
+void shutOffSignal();                   // shut off alarm signal
 void beepTime();                        // beep time when alarm
 void beepDelayTime();                   // beep delay timer when alarm
 void beepLongDelayTime();               // beep LONG delay timer when alarm
@@ -282,8 +282,11 @@ void loop() {
 
         // CHECK LIMITS
         // water level
-
-
+        if (digitalRead(PIN_WATERLOW) == HIGH) {
+            alarmCode = alarmCode | alarm.WATER_LOW;
+        } else {
+            alarmCode = alarmCode &= ~alarm.WATER_LOW;
+        }
 
         // temp
         if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
@@ -300,7 +303,7 @@ void loop() {
         }
 
         // signal
-        if (alarmCode != 0) {            
+        if (alarmCode != alarm.NO_ALARM) {
             while (alarmFlag2 == false) {   // doing once
                 alarmFlag = true;
                 beepTimer.start();
@@ -309,12 +312,12 @@ void loop() {
                 printTime();
                 DEBUG("ONCE");
             }
-            
+
         } else {
             alarmFlag = false;
-            beepTimer.stop();   // beep timer    
-            beepDelayTimer.stop();  
-            printTime();  
+            beepTimer.stop();   // beep timer
+            beepDelayTimer.stop();
+            printTime();
             DEBUG("STOP");
         }
 
@@ -572,7 +575,7 @@ void sendData() {
     // server.send(200, "text/json", "{\"Response\":\"OK\"}");
 
     saveConfig(fileConfigName, config);
-    
+
 
 }
 
@@ -609,12 +612,12 @@ void feedFish() {
 }
 
 void shutOffSignal() {
-    beepTimer.stop();               // beep timer    
+    beepTimer.stop();               // beep timer
     beepDelayTimer.stop();          // beep delay timer
     alarmFlag3 = true;
     beepLongDelayTimer.start();
     alarmFlag2 = true;
-    
+
 
     DEBUG("SHUT OFF BUTTON");
     server.send(200, "text/json", "{\"Response\":\"OK\"}");
