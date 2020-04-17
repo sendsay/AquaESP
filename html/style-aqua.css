@@ -225,12 +225,17 @@ svg circle:nth-child(2) {
     box-shadow: 0px 0px 41px 3px rgba(255,0,0,1);
 }
 
-.signalOff {
+.signalOff, .waterLow {
     display: none;
-} 
+}
 
 .btnSignalOff {
     background: red;
     color: white;
     margin: 20px 0px;
+}
+
+.msg {
+    background: red;
+    color: white;
 }
