@@ -307,24 +307,18 @@ void loop() {
             while (alarmFlag2 == false) {   // doing once
                 alarmFlag = true;
                 beepTimer.start();
-                // beepDelayTimer.stop();
                 alarmFlag2 = true;
-                printTime();
-                DEBUG("ONCE");
             }
 
         } else {
             alarmFlag = false;
             beepTimer.stop();   // beep timer
             beepDelayTimer.stop();
-            printTime();
-            DEBUG("STOP");
         }
 
         if ((alarmFlag == true) and (alarmFlag3 == false)) {
             alarmSignal = not alarmSignal;
             digitalWrite(PIN_BEEPER, alarmSignal);
-            DEBUG("BEEP");
         } else {
             digitalWrite(PIN_BEEPER, LOW);
         }
