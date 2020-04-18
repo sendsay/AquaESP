@@ -16,6 +16,9 @@
 //                                          //
 //////////////////////////////////////////////
 
+
+//TODO: Add offline Jquery & bootstrap
+
 #include <Arduino.h>
 #include <FS.h>
 #include <ArduinoJson.h>
