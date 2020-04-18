@@ -1,3 +1,21 @@
+//////////////////////////////////////////////
+// Aquarium controller 1.0                  //
+// Shpakov Vladyslav aka SendSay            //
+// 18.04.2020                               //
+//                                          //
+// Fish feeding = D2                        //
+// Feeder limit = D0                        //
+// Beeper       = D5                        //
+// Ph meter     = D1                        //
+// Water level  = D7                        //
+//                                          //
+// 5v for OpenAquarium      = VU            //
+// 3.3v for Open Aquarium   = 3.3v          //
+//                                          //
+// sendsay34@gmail.com                      //
+//                                          //
+//////////////////////////////////////////////
+
 #include <Arduino.h>
 #include <FS.h>
 #include <ArduinoJson.h>
@@ -8,7 +26,6 @@
 #include <Ticker.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
-
 
 #include <main.h>
 
