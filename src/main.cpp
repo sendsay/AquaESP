@@ -72,12 +72,10 @@ Config config;                          // config structure
 OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
 DallasTemperature sensors(&oneWire);    // aqua temp probe
 AlarmCodes alarm;                       // alarm codes;
-Ticker beepTimer(beepTime, 1500, MILLIS);              // beep timer when alarm
-// Ticker beepDelayTimer(beepDelayTime, 9000UL, MILLIS);    //beep delay timer when alarm
-// Ticker beepLongDelayTimer(beepLongDelayTime, 10800UL, MILLIS);   //beep LONG delay timer when alarm
-Ticker beepDelayTimer(beepDelayTime, 9000UL, MILLIS);    //beep delay timer when alarm
-Ticker beepLongDelayTimer(beepLongDelayTime, 10800UL, MILLIS);   //beep LONG delay timer when alarm
-Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer
+Ticker beepTimer(beepTime, 15000, MILLIS);              // beep timer when alarm 15 sec
+Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm 15 min
+Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG delay timer when alarm 3 hrs
+Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
 
 /*
 ..######..########.########.##.....##.########.
