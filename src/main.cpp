@@ -53,6 +53,7 @@ void shutOffSignal();                   // shut off alarm signal
 void beepTime();                        // beep time when alarm
 void beepDelayTime();                   // beep delay timer when alarm
 void beepLongDelayTime();               // beep LONG delay timer when alarm
+void delayCheckAlarmTime();            // delay after start check sensors
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -71,11 +72,12 @@ Config config;                          // config structure
 OneWire oneWire(ONE_WIRE_BUS);          // for aqua temp
 DallasTemperature sensors(&oneWire);    // aqua temp probe
 AlarmCodes alarm;                       // alarm codes;
-Ticker beepTimer(beepTime, 15000, MILLIS);              // beep timer when alarm
+Ticker beepTimer(beepTime, 1500, MILLIS);              // beep timer when alarm
 // Ticker beepDelayTimer(beepDelayTime, 9000UL, MILLIS);    //beep delay timer when alarm
 // Ticker beepLongDelayTimer(beepLongDelayTime, 10800UL, MILLIS);   //beep LONG delay timer when alarm
-Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm
-Ticker beepLongDelayTimer(beepLongDelayTime, 10800000UL, MILLIS);   //beep LONG delay timer when alarm
+Ticker beepDelayTimer(beepDelayTime, 9000UL, MILLIS);    //beep delay timer when alarm
+Ticker beepLongDelayTimer(beepLongDelayTime, 10800UL, MILLIS);   //beep LONG delay timer when alarm
+Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer
 
 /*
 ..######..########.########.##.....##.########.
@@ -156,6 +158,8 @@ void setup() {
 
     sensors.begin();                            // start aqua temp probe
 
+    delayCheckAlarmTimer.start();               // delay check sensors
+
     DEBUG("RUNNING!!!");
 }//SETUP
 
@@ -177,6 +181,9 @@ void loop() {
     beepTimer.update();
     beepDelayTimer.update();
     beepLongDelayTimer.update();
+
+// DELAY CHECK SENSORS;
+    delayCheckAlarmTimer.update();
 
 // WORK WITH TIME
     if(second != lastSecond) {
@@ -282,24 +289,27 @@ void loop() {
 
         // CHECK LIMITS
         // water level
-        if (digitalRead(PIN_WATERLOW) == HIGH) {
-            alarmCode = alarmCode | alarm.WATER_LOW;
-        } else {
-            alarmCode = alarmCode &= ~alarm.WATER_LOW;
-        }
+        if (delayCheckSensors == true) {
 
-        // temp
-        if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
-            alarmCode = alarmCode | alarm.TEMP;
-        } else {
-            alarmCode = alarmCode &= ~alarm.TEMP;
-        }
+            if (digitalRead(PIN_WATERLOW) == HIGH) {
+                alarmCode = alarmCode | alarm.WATER_LOW;
+            } else {
+                alarmCode = alarmCode &= ~alarm.WATER_LOW;
+            }
 
-        // pH
-        if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
-            alarmCode = alarmCode | alarm.PH;
-        } else {
-            alarmCode = alarmCode &= ~alarm.PH;
+            // temp
+            if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
+                alarmCode = alarmCode | alarm.TEMP;
+            } else {
+                alarmCode = alarmCode &= ~alarm.TEMP;
+            }
+
+            // pH
+            if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
+                alarmCode = alarmCode | alarm.PH;
+            } else {
+                alarmCode = alarmCode &= ~alarm.PH;
+            }
         }
 
         // signal
@@ -312,12 +322,16 @@ void loop() {
 
         } else {
             alarmFlag = false;
+            alarmFlag2 = false;
+            alarmFlag3 = false;
             beepTimer.stop();   // beep timer
             beepDelayTimer.stop();
+            beepLongDelayTimer.stop();
         }
 
         if ((alarmFlag == true) and (alarmFlag3 == false)) {
             alarmSignal = not alarmSignal;
+            DEBUG("BEEP");
             digitalWrite(PIN_BEEPER, alarmSignal);
         } else {
             digitalWrite(PIN_BEEPER, LOW);
@@ -991,6 +1005,11 @@ void beepLongDelayTime() {
     alarmFlag2 = false;
     alarmFlag3 = false;
     DEBUG("LONG DELAY TIMER");
+}
+
+void delayCheckAlarmTime() {
+    delayCheckSensors = true;
+    DEBUG("START CHECK SENSORS");
 }
 
 /*

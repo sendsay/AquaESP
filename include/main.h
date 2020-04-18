@@ -97,9 +97,6 @@ boolean alarmFlag = false;  // alarm flag
 boolean alarmFlag2 = false;  // alarm flag 2
 boolean alarmFlag3 = false;  // alarm flag 3
 boolean alarmSignal = false; // alarm signal
-
-
-
-
+boolean delayCheckSensors = false; // delay after start chek sensors
 
 //END.

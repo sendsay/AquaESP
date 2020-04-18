@@ -102,34 +102,28 @@ function getSensorsData() {
             //water low
             if (json.alarmCode & WATER_LOW) {
                 $(".msg").removeClass("waterLow");
-                console.log("OK");
             } else {
                 $(".msg").addClass("waterLow");
-                console.log("OK22");
-
             }
-
             // temp
             if (json.alarmCode & TEMP) {
                 $(".temp").addClass("alarm");
             } else {
                 $(".temp").removeClass("alarm");
             }
-
             // ph
             if (json.alarmCode & PH) {
                 $(".ph").addClass("alarm");
             } else {
                 $(".ph").removeClass("alarm");
             }
-
             //tds
             if (json.alarmCode & TDS) {
                 $(".tds").addClass("alarm");
             } else {
                 $(".tds").removeClass("alarm");
             }
-
+            // no alarm
             if (json.alarmCode != 0) {
                 $("#signalOff").removeClass("signalOff");
             } else {
