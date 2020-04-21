@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 
-// #define DEBUG_ENABLE        //DEBUG MODE
+#define DEBUG_ENABLE        //DEBUG MODE
 
 #define HOME                // switch to home work
 

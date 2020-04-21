@@ -73,8 +73,8 @@ void shutOffSignal();                   // shut off alarm signal
 void beepTime();                        // beep time when alarm
 void beepDelayTime();                   // beep delay timer when alarm
 void beepLongDelayTime();               // beep LONG delay timer when alarm
-void delayCheckAlarmTime();            // delay after start check sensors
-
+void delayCheckAlarmTime();             // delay after start check sensors
+void beep(boolean beep);                // beep signal
 /*
 ..#######..########........##.########..######..########..######.
 .##.....##.##.....##.......##.##.......##....##....##....##....##
@@ -302,60 +302,60 @@ void loop() {
         voltage = avergearray(pHArray, 40) * 3.3 / 1024;
         pHValue = 3.5 * voltage + config.offsetPh;
 
+
         //TDS
 
-
-        // CHECK LIMITS
-        // water level
-        if (delayCheckSensors == true) {
-
-            if (digitalRead(PIN_WATERLOW) == HIGH) {
-                alarmCode = alarmCode | alarm.WATER_LOW;
-            } else {
-                alarmCode = alarmCode &= ~alarm.WATER_LOW;
-            }
-
-            // temp
-            if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
-                alarmCode = alarmCode | alarm.TEMP;
-            } else {
-                alarmCode = alarmCode &= ~alarm.TEMP;
-            }
-
-            // pH
-            if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
-                alarmCode = alarmCode | alarm.PH;
-            } else {
-                alarmCode = alarmCode &= ~alarm.PH;
-            }
-        }
-
-        // signal
-        if (alarmCode != alarm.NO_ALARM) {
-            while (alarmFlag2 == false) {   // doing once
-                alarmFlag = true;
-                beepTimer.start();
-                alarmFlag2 = true;
-            }
-
-        } else {
-            alarmFlag = false;
-            alarmFlag2 = false;
-            alarmFlag3 = false;
-            beepTimer.stop();   // beep timer
-            beepDelayTimer.stop();
-            beepLongDelayTimer.stop();
-        }
-
-        if ((alarmFlag == true) and (alarmFlag3 == false)) {
-            alarmSignal = not alarmSignal;
-            DEBUG("BEEP");
-            digitalWrite(PIN_BEEPER, alarmSignal);
-        } else {
-            digitalWrite(PIN_BEEPER, LOW);
-        }
-
     }
+
+    // CHECK LIMITS
+    // water level
+    if (delayCheckSensors == true) {
+
+        if (digitalRead(PIN_WATERLOW) == HIGH) {
+            alarmCode = alarmCode | alarm.WATER_LOW;
+        } else {
+            alarmCode = alarmCode &= ~alarm.WATER_LOW;
+        }
+
+        // temp
+        if ((waterTemp < config.dnEdgeTemp) or (waterTemp > config.upEdgeTemp)) {
+            alarmCode = alarmCode | alarm.TEMP;
+        } else {
+            alarmCode = alarmCode &= ~alarm.TEMP;
+        }
+
+        // pH
+        if ((pHValue < config.dnEdgePh) or (pHValue > config.upEdgePh)) {
+            alarmCode = alarmCode | alarm.PH;
+        } else {
+            alarmCode = alarmCode &= ~alarm.PH;
+        }
+    }
+
+    // signal
+    if (alarmCode != alarm.NO_ALARM) {
+        while (alarmFlag2 == false) {   // doing once
+            alarmFlag = true;
+            beepTimer.start();
+            alarmFlag2 = true;
+        }
+
+    } else {
+        alarmFlag = false;
+        alarmFlag2 = false;
+        alarmFlag3 = false;
+        beepTimer.stop();   // beep timer
+        beepDelayTimer.stop();
+        beepLongDelayTimer.stop();
+    }
+
+    if ((alarmFlag == true) and (alarmFlag3 == false) and (second %2 == 0)) {
+        beep(true);
+    } else {
+        beep(false);
+    }
+
+
 
 }//LOOP
 
@@ -1028,6 +1028,15 @@ void beepLongDelayTime() {
 void delayCheckAlarmTime() {
     delayCheckSensors = true;
     DEBUG("START CHECK SENSORS");
+}
+
+void beep(boolean beep) {
+    if (beep)
+    {
+        tone(PIN_BEEPER, 3000);
+    } else {
+        noTone(PIN_BEEPER);
+    }
 }
 
 /*
