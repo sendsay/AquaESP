@@ -94,7 +94,12 @@ function getSensorsData() {
             $(".box:nth-child(2) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("pH").innerHTML = pHValue + "<span> pH</span>";
 
-            // EDC
+            // TDS
+            tdsValue = json.tdsValue;
+            calc = (440 - (440 * tdsValue) / 300);
+            $(".box:nth-child(3) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+            document.getElementById("tds").innerHTML = tdsValue + "<span> µS</span>";
+         
 
 
             // ALARMS

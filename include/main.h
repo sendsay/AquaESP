@@ -16,7 +16,9 @@
 #define PIN_BEEPER D5                       // Pin buzzer
 #define ONE_WIRE_BUS D1                     // Aqua temp port adress
 #define PIN_WATERLOW D7                     // Water low
-
+#define PIN_ECMETER D6                      // analog for EC meter
+#define PIN_PHMETER D8                      // analog for pH meter
+ 
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ
 byte amountNotStarts = 0;                   // Счет НЕ подключения
@@ -90,13 +92,17 @@ int waterTemp = 85;                       // water temp
 int pHArray[40];   //Store the average value of the sensor feedback
 int pHArrayIndex=0;
 static float pHValue, voltage;
-float Offset = 0;         //deviation compensate
+float Offset = 0;               //deviation compensate
 
-byte alarmCode = 0;       // alarm code to send on page
-boolean alarmFlag = false;  // alarm flag
-boolean alarmFlag2 = false;  // alarm flag 2
-boolean alarmFlag3 = false;  // alarm flag 3
-boolean alarmSignal = false; // alarm signal
+byte alarmCode = 0;             // alarm code to send on page
+boolean alarmFlag = false;      // alarm flag
+boolean alarmFlag2 = false;     // alarm flag 2
+boolean alarmFlag3 = false;     // alarm flag 3
+boolean alarmSignal = false;    // alarm signal
 boolean delayCheckSensors = false; // delay after start chek sensors
+
+boolean changeReadDataPort;     // change data port flag
+int tdsValue = 0;               //TDS value
+
 
 //END.

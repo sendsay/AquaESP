@@ -1,1 +1,1 @@
-{"ssid":"PUTIN UTELE","password":"0674788273","ssidAP":"AQUA_ROOM_AP","passwordAP":"","timezone":"2.00","summertime":"1","ntpServerName":"ntp3.time.in.ua","feedTime":"7","offsetPh":"1.50","upEdgePh":"8.30","dnEdgePh":"2.70","upEdgeTemp":"28","dnEdgeTemp":"25"}
+{"ssid":"SUERTEKSA CNC","password":"61347400","ssidAP":"AQUA_ROOM_AP","passwordAP":"","timezone":"2.00","summertime":"1","ntpServerName":"ntp3.time.in.ua","feedTime":"7","offsetPh":"1.50","upEdgePh":"8.30","dnEdgePh":"2.70","upEdgeTemp":"28","dnEdgeTemp":"25"}

@@ -29,6 +29,7 @@
 #include <Ticker.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <GravityTDS.h>
 
 #include <main.h>
 
@@ -96,6 +97,7 @@ Ticker beepTimer(beepTime, 15000, MILLIS);              // beep timer when alarm
 Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm 15 min
 Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG delay timer when alarm 3 hrs
 Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
+GravityTDS tdsMeter;                    // tds meter
 
 /*
 ..######..########.########.##.....##.########.
@@ -172,9 +174,18 @@ void setup() {
     pinMode(PIN_FEEDING, OUTPUT);               // Motor feeder
     pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
     pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
+    pinMode(PIN_ECMETER, OUTPUT);               // Power for Ec meter
+
+
     //PINS
 
     sensors.begin();                            // start aqua temp probe
+
+
+    tdsMeter.setPin(PIN_A0);
+    tdsMeter.setAref(3.3);
+    tdsMeter.setAdcRange(1024);
+    tdsMeter.begin();
 
     delayCheckAlarmTimer.start();               // delay check sensors
 
@@ -199,6 +210,9 @@ void loop() {
     beepTimer.update();
     beepDelayTimer.update();
     beepLongDelayTimer.update();
+
+// TDS METER
+    tdsMeter.update();
 
 // DELAY CHECK SENSORS;
     delayCheckAlarmTimer.update();
@@ -294,17 +308,30 @@ void loop() {
     if (secFr == 0) {
         // water temp
         sensors.requestTemperatures();
-        waterTemp = sensors.getTempCByIndex(0);
+        waterTemp = sensors.getTempCByIndex(0);       
+
+        // changeReadDataPort = not changeReadDataPort;
+        // if (changeReadDataPort)
+        // {
+        //     digitalWrite(PIN_PHMETER, LOW);
+        //     digitalWrite(PIN_ECMETER, HIGH);
+
+            
+        // } else {
+        //     digitalWrite(PIN_ECMETER, LOW);   
+        //     digitalWrite(PIN_PHMETER, HIGH);    
+        // }
+        
 
         //Ph
-        pHArray[pHArrayIndex++] = analogRead(A0);
+        pHArray[pHArrayIndex++] = analogRead(PIN_A0);
         if(pHArrayIndex == 40) pHArrayIndex = 0;
         voltage = avergearray(pHArray, 40) * 3.3 / 1024;
         pHValue = 3.5 * voltage + config.offsetPh;
 
-
         //TDS
-
+        // tdsMeter.setTemperature(waterTemp);
+        // tdsValue = tdsMeter.getTdsValue();
     }
 
     // CHECK LIMITS
