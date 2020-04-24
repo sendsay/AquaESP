@@ -827,15 +827,15 @@ void loadConfiguration(const char *filename, Config &config) {
     strlcpy(config.ssid, doc["ssid"] | "PUTIN UTELE", sizeof(config.ssid));
     strlcpy(config.password, doc["password"] | "0674788273", sizeof(config.password));
 #else
-    strlcpy(config.ssid, doc["ssid"] | "SUERTEKSA CNC", sizeof(config.ssid));
-    strlcpy(config.password, doc["password"] | "61347400", sizeof(config.password));
+    strlcpy(config.ssid, doc["ssid"] | "4G-Gateway-792B", sizeof(config.ssid));
+    strlcpy(config.password, doc["password"] | "Su61347400!", sizeof(config.password));
 #endif
     strlcpy(config.ssidAP, doc["ssidAP"] | "AQUA_ROOM_AP", sizeof(config.ssidAP));
-    strlcpy(config.passwordAP, doc["passwordAP"] | "1111", sizeof(config.passwordAP));
+    strlcpy(config.passwordAP, doc["passwordAP"] | "", sizeof(config.passwordAP));
 
     //Time
     config.timeZone = doc["timezone"] | 2.0;
-    config.summerTime = doc["summertime"] | 0;
+    config.summerTime = doc["summertime"] | 1;
     strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
 
     //MQTT
@@ -843,11 +843,11 @@ void loadConfiguration(const char *filename, Config &config) {
 
     //Aqua
     config.feedTime = doc["feedTime"] | 7;
-    config.offsetPh = doc["offsetPh"] | 0;
+    config.offsetPh = doc["offsetPh"] | -0.40;
     config.upEdgePh = doc["upEdgePh"] | 8.2;
     config.dnEdgePh = doc["dnEdgePh"] | 6.8;
     config.upEdgeTemp = doc["upEdgeTemp"] | 28;
-    config.dnEdgeTemp = doc["dnEdgeTemp"] | 24;
+    config.dnEdgeTemp = doc["dnEdgeTemp"] | 20;
 
 
     // TODO: Add all parameters for loading
