@@ -25,10 +25,10 @@ GravityTDS::GravityTDS()
 {
     this->pin = A0;
     this->temperature = 25.0;
-    this->aref = 5.0;
+    this->aref = 3.3;
     this->adcRange = 1024.0;
     this->kValueAddress = 8;
-    this->kValue = 1.0;
+    this->kValue = 1.64;
 }
 
 GravityTDS::~GravityTDS()
@@ -85,6 +85,7 @@ float GravityTDS::getKvalue()
 void GravityTDS::update()
 {
 	this->analogValue = analogRead(this->pin);
+
 	this->voltage = this->analogValue/this->adcRange*this->aref;
 	this->ecValue=(133.42*this->voltage*this->voltage*this->voltage - 255.86*this->voltage*this->voltage + 857.39*this->voltage)*this->kValue;
 	this->ecValue25  =  this->ecValue / (1.0+0.02*(this->temperature-25.0));  //temperature compensation
@@ -97,12 +98,14 @@ void GravityTDS::update()
 
 float GravityTDS::getTdsValue()
 {
-	return tdsValue;
+	return tdsValue; 
+	// return tdsValue / 2;
 }
 
 float GravityTDS::getEcValue()
 {
       return ecValue25;
+      // return ecValue25 / 2;
 }
 
 
@@ -111,7 +114,7 @@ void GravityTDS::readKValues()
   //  EEPROM_read(this->kValueAddress, this->kValue);  
     if(EEPROM.read(this->kValueAddress)==0xFF && EEPROM.read(this->kValueAddress+1)==0xFF && EEPROM.read(this->kValueAddress+2)==0xFF && EEPROM.read(this->kValueAddress+3)==0xFF)
     {
-      this->kValue = 1.0;   // default value: K = 1.0
+      this->kValue = 1.64;   // default value: K = 1.0
    //   EEPROM_write(this->kValueAddress, this->kValue);
     }
 }

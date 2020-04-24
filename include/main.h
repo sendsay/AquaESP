@@ -11,6 +11,7 @@
 #define DEBUG(x)
 #endif
 
+#define PIN_ANAL A0                         // Pin analog sensors
 #define PIN_FEEDING D2                      // Pin motor feeding
 #define PIN_FEEDLIMIT D0                    // Pin feed mechanism limit
 #define PIN_BEEPER D5                       // Pin buzzer
@@ -18,6 +19,7 @@
 #define PIN_WATERLOW D7                     // Water low
 #define PIN_ECMETER D6                      // analog for EC meter
 #define PIN_PHMETER D8                      // analog for pH meter
+#define MAX_BUFFER_PH 60                    // max buffer size for pH meter
  
 boolean firstStart = false;                 // Первый старт
 boolean WIFI_connected = false;             // Флаг подкючекния к ВАЙФАЙ
@@ -87,7 +89,7 @@ int currMode = 0;
 enum Errors {NOERRORS, WATERLEVEL, TEMPERATURE, PH, EDC};
 
 boolean waitFeedEnd = false;                // for fish feed flag
-int waterTemp = 85;                       // water temp
+float waterTemp = 85;                       // water temp
 
 int pHArray[40];   //Store the average value of the sensor feedback
 int pHArrayIndex=0;
@@ -101,8 +103,9 @@ boolean alarmFlag3 = false;     // alarm flag 3
 boolean alarmSignal = false;    // alarm signal
 boolean delayCheckSensors = false; // delay after start chek sensors
 
-boolean changeReadDataPort;     // change data port flag
+boolean changeReadDataPort = false;     // change data port flag
 int tdsValue = 0;               //TDS value
+int ecValue = 0;               //EC value
 
 
 //END.

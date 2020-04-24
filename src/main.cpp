@@ -76,6 +76,8 @@ void beepDelayTime();                   // beep delay timer when alarm
 void beepLongDelayTime();               // beep LONG delay timer when alarm
 void delayCheckAlarmTime();             // delay after start check sensors
 void beep(boolean beep);                // beep signal
+void changeAPortTime();
+
 /*
 ..#######..########........##.########..######..########..######.
 .##.....##.##.....##.......##.##.......##....##....##....##....##
@@ -98,7 +100,7 @@ Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer wh
 Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG delay timer when alarm 3 hrs
 Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
 GravityTDS tdsMeter;                    // tds meter
-
+Ticker changeAPortTimer(changeAPortTime, 30000UL);
 /*
 ..######..########.########.##.....##.########.
 .##....##.##..........##....##.....##.##.....##
@@ -175,19 +177,24 @@ void setup() {
     pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
     pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
     pinMode(PIN_ECMETER, OUTPUT);               // Power for Ec meter
+    pinMode(PIN_PHMETER, OUTPUT);                    // Power for pH meter
 
 
     //PINS
-
     sensors.begin();                            // start aqua temp probe
 
+    // tdsMeter.setPin(PIN_ANAL);
+    // tdsMeter.setAref(3.3);
+    // tdsMeter.setAdcRange(1023);
+    tdsMeter.begin();                           // start TDS meter
 
-    tdsMeter.setPin(PIN_A0);
-    tdsMeter.setAref(3.3);
-    tdsMeter.setAdcRange(1024);
-    tdsMeter.begin();
+
+    tdsMeter.runMode(CALIBRATE_START);
+    tdsMeter.setCalData(238);
+    tdsMeter.runMode(CALIBRATE_END);
 
     delayCheckAlarmTimer.start();               // delay check sensors
+    changeAPortTimer.start();
 
     DEBUG("RUNNING!!!");
 }//SETUP
@@ -211,8 +218,9 @@ void loop() {
     beepDelayTimer.update();
     beepLongDelayTimer.update();
 
-// TDS METER
-    tdsMeter.update();
+
+    changeAPortTimer.update();
+
 
 // DELAY CHECK SENSORS;
     delayCheckAlarmTimer.update();
@@ -302,37 +310,57 @@ void loop() {
         break;
     }
 
-
     // GET SENSORS
-    // if ((second % 1 == 0) and (secFr == 0)) {
-    if (secFr == 0) {
-        // water temp
+
+    if (changeReadDataPort == false)  {
+        digitalWrite(PIN_PHMETER, LOW);
+        digitalWrite(PIN_ECMETER, HIGH); 
+
         sensors.requestTemperatures();
-        waterTemp = sensors.getTempCByIndex(0);       
+        waterTemp = sensors.getTempCByIndex(0); 
 
-        // changeReadDataPort = not changeReadDataPort;
-        // if (changeReadDataPort)
-        // {
-        //     digitalWrite(PIN_PHMETER, LOW);
-        //     digitalWrite(PIN_ECMETER, HIGH);
+        // TDS METER
+        tdsMeter.setTemperature(15.7);
+        //TODO: Change temp to watertemp 
 
-            
-        // } else {
-        //     digitalWrite(PIN_ECMETER, LOW);   
-        //     digitalWrite(PIN_PHMETER, HIGH);    
-        // }
-        
+            tdsMeter.update();        
 
-        //Ph
-        pHArray[pHArrayIndex++] = analogRead(PIN_A0);
-        if(pHArrayIndex == 40) pHArrayIndex = 0;
-        voltage = avergearray(pHArray, 40) * 3.3 / 1024;
+        // get data
+        tdsValue = tdsMeter.getTdsValue();
+        ecValue = tdsMeter.getEcValue();
+     
+    } else {
+
+        digitalWrite(PIN_ECMETER, LOW);   
+        digitalWrite(PIN_PHMETER, HIGH);   
+        //Ph get data
+        pHArray[pHArrayIndex++] = analogRead(PIN_ANAL);    
+        if(pHArrayIndex == MAX_BUFFER_PH) pHArrayIndex = 0;
+
+        voltage = avergearray(pHArray, MAX_BUFFER_PH) * 3.3 / 1024;
         pHValue = 3.5 * voltage + config.offsetPh;
 
-        //TDS
-        // tdsMeter.setTemperature(waterTemp);
-        // tdsValue = tdsMeter.getTdsValue();
+
+    }  
+
+    if (not secFr) {
+
+        DEBUG("TDS");   
+        DEBUG(tdsValue);  
+
+        DEBUG("pH");
+        DEBUG(pHValue); 
+        
+        DEBUG("Mode");   
+        DEBUG(changeReadDataPort);         
+        DEBUG("");
+
     }
+
+
+
+        
+    
 
     // CHECK LIMITS
     // water level
@@ -1064,6 +1092,10 @@ void beep(boolean beep) {
     } else {
         noTone(PIN_BEEPER);
     }
+}
+
+void changeAPortTime() {
+    changeReadDataPort = not changeReadDataPort;
 }
 
 /*
