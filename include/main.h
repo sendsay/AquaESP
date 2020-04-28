@@ -76,8 +76,7 @@ const char* fileConfigName = "/config.txt";
 // Config structure
 
 // Alarm codes structure
-struct AlarmCodes
-{
+struct AlarmCodes {
     const byte NO_ALARM = 0;
     const byte WATER_LOW = 1;
     const byte TEMP = 2;
@@ -85,6 +84,18 @@ struct AlarmCodes
     const byte TDS = 8;
 };
 // Alarm codes structure
+
+//MQTT switches structure
+struct SwitchesMQTT {
+    const byte SW2_1 = 1;
+    const byte SW2_2 = 2;
+    const byte SW4_1 = 4;
+    const byte SW4_2 = 8;
+    const byte SW4_3 = 16;
+    const byte SW4_4 = 32;    
+};
+
+//MQTT switches structure
 
 // Modes
 enum Modes {NOTHING, CHECKSENSORS, FEEDFISH, ALARM};
