@@ -3,7 +3,7 @@
 
 #define DEBUG_ENABLE        //DEBUG MODE
 
-// #define HOME                // switch to home work
+ #define HOME                // switch to home work
 
 #ifdef DEBUG_ENABLE
 #define DEBUG(x) Serial.println(x)
@@ -67,7 +67,7 @@ struct Config {
     char mqttUserName[50] = "cavxjmrm";                              // Логи от сервер
     char mqttpass[50] = "PNNp5kZaoEXo";                         // Пароль от сервера MQTT
     char mqttname[50] = "test";                                 // Имя информера
-    char mqttsubinform[50] = "stat/sonoff4/RESULT";             // Сообщение
+    char mqttsubinform[50] = "stat/sonoff2/RESULT";             // Сообщение
 
 
 };
@@ -92,7 +92,7 @@ struct SwitchesMQTT {
     const byte SW4_1 = 4;
     const byte SW4_2 = 8;
     const byte SW4_3 = 16;
-    const byte SW4_4 = 32;    
+    const byte SW4_4 = 32;
 };
 
 //MQTT switches structure
@@ -119,4 +119,5 @@ boolean alarmFlag3 = false;  // alarm flag 3
 boolean alarmSignal = false; // alarm signal
 boolean delayCheckSensors = false; // delay after start chek sensors
 
+byte switchesMqtt = 0;    // state switches mqtt
 //END.

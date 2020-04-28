@@ -100,6 +100,7 @@ Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG d
 Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
 WiFiClient ClientMqtt;                  //Wifi client for MQTT
 PubSubClient clientMqtt(ClientMqtt);    // MQTT client
+SwitchesMQTT switchMqtt;                // mqtt switches
 
 /*
 ..######..########.########.##.....##.########.
@@ -144,11 +145,15 @@ void setup() {
 
         if (clientMqtt.connected()) {
             DEBUG("Get MQTT status!");
-            clientMqtt.subscribe("stat/sonoff4/RESULT");
-            clientMqtt.publish("cmnd/sonoff4/POWER1", "");
-            clientMqtt.publish("cmnd/sonoff4/POWER2", "");
+
+            clientMqtt.subscribe("stat/sonoff2/RESULT");
+
+            clientMqtt.publish("cmnd/sonoff2/POWER1", "");
+            clientMqtt.publish("cmnd/sonoff2/POWER2", "");
+
+            //TODO: Add sonOFF here
         }
-    }   
+    }
 
 
     //WEB
@@ -401,23 +406,80 @@ void loop() {
 */
 
 void callback(char* topic, byte* payload, unsigned int length) {
-  Serial.print("Message arrived [");
-  Serial.print(topic);
-  Serial.print("] ");
-  for (int i = 0; i < length; i++) {
-    Serial.print((char)payload[i]);
-  }
-  Serial.println();
 
-  // Switch on the LED if an 1 was received as first character
-//   if ((char)payload[0] == '1') {
-//     digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
-//     // but actually the LED is on; this is because
-//     // it is active low on the ESP-01)
-//   } else {
-//     digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
-//   }
+    String payLoad = "";
+    String topiC = topic;
 
+
+    for (int i = 0; i < length; i++) {
+        payLoad += ((char)payload[i]);
+    }
+
+    StaticJsonDocument<200> doc;
+
+    DeserializationError error = deserializeJson(doc, payLoad);
+
+    if (error) {
+        DEBUG(F("deserializeJson() failed: "));
+        DEBUG(error.c_str());
+        return;
+    }
+
+    // sonoff 2
+    if (topiC.equals("stat/sonoff2/RESULT")) {
+        String sw1 = doc["POWER1"];
+        String sw2 = doc["POWER2"];
+
+        // sw 1
+        if (sw1.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW2_1;
+        } else if (sw1.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW2_1;
+        }
+
+        //sw 2
+        if (sw2.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW2_2;
+        } else if (sw2.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW2_2;
+        }
+    }
+
+    // sonoff 4
+    if (topiC.equals("stat/sonoff4/RESULT")) {
+        String sw1 = doc["POWER1"];
+        String sw2 = doc["POWER2"];
+        String sw3 = doc["POWER3"];
+        String sw4 = doc["POWER4"];
+
+        // sw 1
+        if (sw1.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW4_1;
+        } else if (sw1.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW4_1;
+        }
+
+        //sw 2
+        if (sw2.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW4_2;
+        } else if (sw2.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW4_2;
+        }
+
+        // sw 3
+        if (sw3.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW4_3;
+        } else if (sw3.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW4_3;
+        }
+
+        //sw 4
+        if (sw4.equals("ON")) {
+            switchesMqtt = switchesMqtt | switchMqtt.SW4_4;
+        } else if (sw4.equals("OFF")) {
+            switchesMqtt = switchesMqtt &= ~switchMqtt.SW4_4;
+        }
+    }
 }
 
 /*
@@ -657,7 +719,8 @@ void sendData() {
 }
 
 void restart() {
-    server.send(200, "text/json", "OK");
+    // server.send(200, "text/json", "OK");
+    server.send(200, "text/json", "{\"Response\":\"OK\"}");
     delay(100);
     ESP.restart();
 }
