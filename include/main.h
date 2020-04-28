@@ -1,7 +1,7 @@
 #include <Arduino.h>
 
 
-// #define DEBUG_ENABLE        //DEBUG MODE
+#define DEBUG_ENABLE        //DEBUG MODE
 
 // #define HOME                // switch to home work
 
@@ -56,11 +56,20 @@ struct Config {
     int summerTime = 0;
 
     int feedTime = 7;       // hour for fish feeding
-    float offsetPh = 1.4;   // offset pH sensor data
-    float upEdgePh = 8.5;   // up edge pH sensor
-    float dnEdgePh = 6.8;   // down edge pH sensor
+    float offsetPh = -0.4;   // offset pH sensor data
+    float upEdgePh = 7.8;   // up edge pH sensor
+    float dnEdgePh = 6.6;   // down edge pH sensor
     int upEdgeTemp = 28;    // up edge temp sensor
-    int dnEdgeTemp = 22;    // down edge temp sensor
+    int dnEdgeTemp = 20;    // down edge temp sensor
+
+    char mqtt_server[50] = "m24.cloudmqtt.com";
+    int mqtt_port = 18354;
+    char mqttUserName[50] = "cavxjmrm";                              // Логи от сервер
+    char mqttpass[50] = "PNNp5kZaoEXo";                         // Пароль от сервера MQTT
+    char mqttname[50] = "test";                                 // Имя информера
+    char mqttsubinform[50] = "stat/sonoff4/RESULT";             // Сообщение
+
+
 };
 
 const char* fileConfigName = "/config.txt";

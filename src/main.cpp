@@ -29,6 +29,7 @@
 #include <Ticker.h>
 #include <OneWire.h>
 #include <DallasTemperature.h>
+#include <PubSubClient.h>
 
 #include <main.h>
 
@@ -75,6 +76,7 @@ void beepDelayTime();                   // beep delay timer when alarm
 void beepLongDelayTime();               // beep LONG delay timer when alarm
 void delayCheckAlarmTime();             // delay after start check sensors
 void beep(boolean beep);                // beep signal
+void callback(char* topic, byte* payload, unsigned int length);     // call back MQTT
 /*
 ..#######..########........##.########..######..########..######.
 .##.....##.##.....##.......##.##.......##....##....##....##....##
@@ -96,6 +98,8 @@ Ticker beepTimer(beepTime, 15000, MILLIS);              // beep timer when alarm
 Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm 15 min
 Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG delay timer when alarm 3 hrs
 Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
+WiFiClient ClientMqtt;                  //Wifi client for MQTT
+PubSubClient clientMqtt(ClientMqtt);    // MQTT client
 
 /*
 ..######..########.########.##.....##.########.
@@ -132,6 +136,21 @@ void setup() {
         timeUpdateNTP();                    // update Time
     }
 
+    //MQTT
+    if (WiFi.status() == WL_CONNECTED) {
+        clientMqtt.setServer(config.mqtt_server, config.mqtt_port);
+        clientMqtt.setCallback(callback);
+        clientMqtt.connect(config.mqttname, config.mqttUserName, config.mqttpass);
+
+        if (clientMqtt.connected()) {
+            DEBUG("Get MQTT status!");
+            clientMqtt.subscribe("stat/sonoff4/RESULT");
+            clientMqtt.publish("cmnd/sonoff4/POWER1", "");
+            clientMqtt.publish("cmnd/sonoff4/POWER2", "");
+        }
+    }   
+
+
     //WEB
     server.begin();
     server.on("/", fileindex);
@@ -158,7 +177,6 @@ void setup() {
     server.on("/script.js", script);
     server.on("script-params.js", script_params);
     server.on("/script-params.js", script_params);
-
 
     server.on("/getData", sendData);
     server.on("/saveContent", saveContent);
@@ -199,6 +217,9 @@ void loop() {
     beepTimer.update();
     beepDelayTimer.update();
     beepLongDelayTimer.update();
+
+// MQTT
+    clientMqtt.loop();
 
 // DELAY CHECK SENSORS;
     delayCheckAlarmTimer.update();
@@ -368,6 +389,36 @@ void loop() {
 .##.......##.....##.##...###.##....##....##.....##..##.....##.##...###.##....##
 .##........#######..##....##..######.....##....####..#######..##....##..######.
 */
+
+/*
+..######.....###....##.......##.......########.....###.....######..##....##
+.##....##...##.##...##.......##.......##.....##...##.##...##....##.##...##.
+.##........##...##..##.......##.......##.....##..##...##..##.......##..##..
+.##.......##.....##.##.......##.......########..##.....##.##.......#####...
+.##.......#########.##.......##.......##.....##.#########.##.......##..##..
+.##....##.##.....##.##.......##.......##.....##.##.....##.##....##.##...##.
+..######..##.....##.########.########.########..##.....##..######..##....##
+*/
+
+void callback(char* topic, byte* payload, unsigned int length) {
+  Serial.print("Message arrived [");
+  Serial.print(topic);
+  Serial.print("] ");
+  for (int i = 0; i < length; i++) {
+    Serial.print((char)payload[i]);
+  }
+  Serial.println();
+
+  // Switch on the LED if an 1 was received as first character
+//   if ((char)payload[0] == '1') {
+//     digitalWrite(BUILTIN_LED, LOW);   // Turn the LED on (Note that LOW is the voltage level
+//     // but actually the LED is on; this is because
+//     // it is active low on the ESP-01)
+//   } else {
+//     digitalWrite(BUILTIN_LED, HIGH);  // Turn the LED off by making the voltage HIGH
+//   }
+
+}
 
 /*
 .##......##.####.########.####.....######...#######..##....##.##....##.########..######..########

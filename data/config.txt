@@ -1,1 +1,1 @@
-{"ssid":"4G-Gateway-792B","password":"Su61347400!","ssidAP":"AQUA_ROOM_AP","passwordAP":"","timezone":"2.00","summertime":"1","ntpServerName":"ntp3.time.in.ua","feedTime":"7","offsetPh":"-0.40","upEdgePh":"8.20","dnEdgePh":"6.80","upEdgeTemp":"27","dnEdg1Temp":"20"}
+{"ssid":"4G-Gateway-729B","password":"Su61347400!","ssidAP":"AQUA_ROOM_AP","passwordAP":"","timezone":"2.00","summertime":"1","ntpServerName":"ntp3.time.in.ua","feedTime":"7","offsetPh":"-0.40","upEdgePh":"8.20","dnEdgePh":"6.80","upEdgeTemp":"27","dnEdg1Temp":"20"}
