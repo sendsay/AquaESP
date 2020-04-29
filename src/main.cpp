@@ -56,6 +56,7 @@ void lightpng();                        // web light png
 void parampng();                        // web param png
 void script();                          // web script js
 void script_params();                   // web script  param js
+void script_light();                    // web script  light js
 void printTime();                       // print time for debug
 void timeUpdateNTP();                   // update time from iNet
 void getNTPtime();                      // get time from server
@@ -152,9 +153,9 @@ void setup() {
             clientMqtt.subscribe("stat/sonoff2/RESULT");
             clientMqtt.subscribe("stat/sonoff4/RESULT");
 
-            switchRequestTime();       
+            switchRequestTime();
 
-            
+
         }
     }
 
@@ -185,6 +186,8 @@ void setup() {
     server.on("/script.js", script);
     server.on("script-params.js", script_params);
     server.on("/script-params.js", script_params);
+    server.on("script-light.js", script_light);
+    server.on("/script-light.js", script_light);
 
     server.on("/getData", sendData);
     server.on("/saveContent", saveContent);
@@ -192,6 +195,7 @@ void setup() {
     server.on("/getSensorsData", getSensorsData);
     server.on("/feedFish", feedFish);
     server.on("/shutOffSignal", shutOffSignal);
+    server.on("/getDataSwithes", sendSwStatusWeb);
     //WEB
 
     //PINS
@@ -233,7 +237,7 @@ void loop() {
 // DELAY CHECK SENSORS;
     delayCheckAlarmTimer.update();
 
-// 
+//
     switchRequestTimer.update();
 
 // WORK WITH TIME
@@ -646,6 +650,11 @@ void script() {
 
 void script_params() {
     File file = SPIFFS.open("/script-params.js.gz", "r");
+    size_t sent = server.streamFile(file, "application/javascript");
+}
+
+void script_light() {
+    File file = SPIFFS.open("/script-light.js.gz", "r");
     size_t sent = server.streamFile(file, "application/javascript");
 }
 
@@ -1178,11 +1187,10 @@ void sendSwStatusWeb() {
     String json = "{";
     //wifi
     json += "\"switches\":\"";
-    json += switchesMqtt; 
+    json += switchesMqtt;
     json += "\"}";
 
     server.send (200, "text/json", json);
-    DEBUG(json);
 }
 
 
