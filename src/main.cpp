@@ -77,6 +77,9 @@ void beepLongDelayTime();               // beep LONG delay timer when alarm
 void delayCheckAlarmTime();             // delay after start check sensors
 void beep(boolean beep);                // beep signal
 void callback(char* topic, byte* payload, unsigned int length);     // call back MQTT
+void switchRequestTime();               // request status switches
+void sendSwStatusWeb();                 // web send status switches
+
 /*
 ..#######..########........##.########..######..########..######.
 .##.....##.##.....##.......##.##.......##....##....##....##....##
@@ -98,6 +101,7 @@ Ticker beepTimer(beepTime, 15000, MILLIS);              // beep timer when alarm
 Ticker beepDelayTimer(beepDelayTime, 900000UL, MILLIS);    //beep delay timer when alarm 15 min
 Ticker beepLongDelayTimer(beepLongDelayTime, 1080000UL, MILLIS);   //beep LONG delay timer when alarm 3 hrs
 Ticker delayCheckAlarmTimer(delayCheckAlarmTime, 60000, MILLIS);   // delay chack alarm timer 1 min
+Ticker switchRequestTimer(switchRequestTime, 60000);
 WiFiClient ClientMqtt;                  //Wifi client for MQTT
 PubSubClient clientMqtt(ClientMqtt);    // MQTT client
 SwitchesMQTT switchMqtt;                // mqtt switches
@@ -144,14 +148,13 @@ void setup() {
         clientMqtt.connect(config.mqttname, config.mqttUserName, config.mqttpass);
 
         if (clientMqtt.connected()) {
-            DEBUG("Get MQTT status!");
 
             clientMqtt.subscribe("stat/sonoff2/RESULT");
+            clientMqtt.subscribe("stat/sonoff4/RESULT");
 
-            clientMqtt.publish("cmnd/sonoff2/POWER1", "");
-            clientMqtt.publish("cmnd/sonoff2/POWER2", "");
+            switchRequestTime();       
 
-            //TODO: Add sonOFF here
+            
         }
     }
 
@@ -199,6 +202,7 @@ void setup() {
 
     sensors.begin();                            // start aqua temp probe
 
+    switchRequestTimer.start();
     delayCheckAlarmTimer.start();               // delay check sensors
 
     DEBUG("RUNNING!!!");
@@ -228,6 +232,9 @@ void loop() {
 
 // DELAY CHECK SENSORS;
     delayCheckAlarmTimer.update();
+
+// 
+    switchRequestTimer.update();
 
 // WORK WITH TIME
     if(second != lastSecond) {
@@ -480,6 +487,9 @@ void callback(char* topic, byte* payload, unsigned int length) {
             switchesMqtt = switchesMqtt &= ~switchMqtt.SW4_4;
         }
     }
+
+    sendSwStatusWeb();
+
 }
 
 /*
@@ -1153,6 +1163,30 @@ void beep(boolean beep) {
     }
 }
 
+void switchRequestTime() {
+
+    clientMqtt.publish("cmnd/sonoff2/POWER1", "");
+    clientMqtt.publish("cmnd/sonoff2/POWER2", "");
+    clientMqtt.publish("cmnd/sonoff4/POWER1", "");
+    clientMqtt.publish("cmnd/sonoff4/POWER2", "");
+    clientMqtt.publish("cmnd/sonoff4/POWER3", "");
+    clientMqtt.publish("cmnd/sonoff4/POWER4", "");
+}
+
+void sendSwStatusWeb() {
+
+    String json = "{";
+    //wifi
+    json += "\"switches\":\"";
+    json += switchesMqtt; 
+    json += "\"}";
+
+    server.send (200, "text/json", json);
+    DEBUG(json);
+}
+
+
+
 /*
 .########.##....##.########.
 .##.......###...##.##.....##
@@ -1162,4 +1196,3 @@ void beep(boolean beep) {
 .##.......##...###.##.....##
 .########.##....##.########.
 */
-//END.
