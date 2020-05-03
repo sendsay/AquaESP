@@ -10,17 +10,21 @@ var SW4_2 = 8;
 var SW4_3 = 16;
 var SW4_4 = 32;
 
-setInterval(getSwitches, 10000);
 
-function clickSw(id, sw) {
+ setInterval(getSwitches, 1000);
 
-    // if (json.alarmCode & sw) {
-    //     document.getElementById(id).checked = true;
-    // } else {
-    //     document.getElementById(id).checked = false;
-    // }
+function clickSw(id) {
 
-    console.log("OK");
+    if (document.getElementById(id).checked) {
+        mode = true;
+    } else {
+        mode = false;
+    }
+
+    var content = "/switchesMode?id=" + id + "&mode=" + mode;
+
+    xmlHttp.open("POST", content, true);
+    xmlHttp.send();
 }
 
 function getSwitches() {
@@ -33,7 +37,7 @@ function getSwitches() {
 
             json=JSON.parse(str);
 
-            console.log(json.switches);
+            // console.log(json.switches);
 
             // sonoff 2
             if (json.switches & SW2_1) {

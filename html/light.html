@@ -11,7 +11,7 @@
 
     <title>Light control</title>
 </head>
-<body>
+<body onload="getSwitches()">
 
     <div class="container-fluid">
         <div class="row">
@@ -19,7 +19,7 @@
                 <h2>Выключатель 1</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw21" onclick="clickSw('sw21', 'SW2_1')">
+                <input type="checkbox" name="sw21" id="sw21" onclick="clickSw('sw21')">
             </div>
         </div>
         <div class="row">
@@ -27,7 +27,7 @@
                 <h2>Выключатель 2</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw22" onclick="clickSw('sw22', 'SW2_2')>
+                <input type="checkbox" name="sw22" id="sw22" onclick="clickSw('sw22')">
             </div>
         </div>
         <div class="row">
@@ -35,7 +35,7 @@
                 <h2>Выключатель 3</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw41">
+                <input type="checkbox" name="sw41" id="sw41" onclick="clickSw('sw41')">
             </div>
         </div>
         <div class="row">
@@ -43,7 +43,7 @@
                 <h2>Выключатель 4</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw42">
+                <input type="checkbox" name="sw42" id="sw42" onclick="clickSw('sw42')">
             </div>
         </div>
         <div class="row">
@@ -51,7 +51,7 @@
                 <h2>Выключатель 5</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw43">
+                <input type="checkbox" name="sw43" id="sw43" onclick="clickSw('sw43')">
             </div>
         </div>
         <div class="row">
@@ -59,7 +59,7 @@
                 <h2>Выключатель 6</h2>
             </div>
             <div class="col-md-6 text-center string">
-                <input type="checkbox" name="sw1" id="sw44">
+                <input type="checkbox" name="sw44" id="sw44" onclick="clickSw('sw44')">
             </div>
         </div>
     </div>

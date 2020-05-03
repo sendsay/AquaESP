@@ -138,7 +138,7 @@
         <!---TIME-->
 
         <!-- MQTT -->
-        <!-- <div class="row">
+        <div class="row">
             <div class="col header text-center">
                 <h3>MQTT</h3>
             </div>
@@ -174,110 +174,130 @@
                 <input id="mqttpass" type="text" class="css-input" pattern="[-\w\s#@/]{0,20}" placeholder="например: dK4mJd" title="Max. 20 simbols">
             </div>
         </div>
+
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Префикс устройства :</h4>
+                <h4>Имя пользователя :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttname" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome" title="Min. 1 max. 24 simbols">
+                <input id="mqttid" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: fkwiI" title="Min. 1 max. 24 simbols">
             </div>
         </div>
+
         <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Префикс устройства (Sonoff dual):</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttname2" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: sonoff2" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+        <!-- <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Выключатель 1 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch1" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw1" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Название выключателя 1 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch1name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname21" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
             </div>
         </div>
-        <div class="row paramrow">
+        <!-- <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Выключатель 2 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch2" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw2" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Название выключателя 2 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch2name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname22" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Вананя" title="Min. 1 max. 24 simbols">
             </div>
         </div>
+
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Выключатель 3 :</h4>
+                <h4>Префикс устройства (Sonoff 4 Pro):</h4>
+            </div>
+            <div class="col text-left">
+                <input id="mqttname4" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: sonoff4" title="Min. 1 max. 24 simbols">
+            </div>
+        </div>
+
+        <!-- <div class="row paramrow">
+            <div class="col text-right smallheader">
+                <h4>Выключатель 1 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch3" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw3" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Название выключателя 3 :</h4>
+                <h4>Название выключателя 1 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch3name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname41" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
             </div>
         </div>
-        <div class="row paramrow">
+        <!-- <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Выключатель 4 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch4" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw4" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Название выключателя 4 :</h4>
+                <h4>Название выключателя 2 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch4name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname42" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Ванная" title="Min. 1 max. 24 simbols">
             </div>
         </div>
-        <div class="row paramrow">
+        <!-- <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Выключатель 5 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch5" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw5" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Название выключателя 5 :</h4>
+                <h4>Название выключателя 3 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch5name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname43" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Кухня" title="Min. 1 max. 24 simbols">
             </div>
         </div>
-        <div class="row paramrow">
+        <!-- <div class="row paramrow">
             <div class="col text-right smallheader">
                 <h4>Выключатель 6 :</h4>
             </div>
             <div class="col text-left">
                 <input id="mqttswitch6" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: MyHome/sw6" title="Min. 1 max. 24 simbols">
             </div>
-        </div>
+        </div> -->
         <div class="row paramrow">
             <div class="col text-right smallheader">
-                <h4>Название выключателя 6 :</h4>
+                <h4>Название выключателя 4 :</h4>
             </div>
             <div class="col text-left">
-                <input id="mqttswitch6name" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Спальня" title="Min. 1 max. 24 simbols">
+                <input id="mqttswitchname44" type="text" class="css-input" pattern="[-\w\s#@/]{1,24}" placeholder="например: Коридор" title="Min. 1 max. 24 simbols">
             </div>
-        </div> -->
+        </div>
         <!-- MQTT -->
 
         <!-- AQUARUIM -->

@@ -62,12 +62,22 @@ struct Config {
     int upEdgeTemp = 28;    // up edge temp sensor
     int dnEdgeTemp = 20;    // down edge temp sensor
 
-    char mqtt_server[50] = "m24.cloudmqtt.com";
-    int mqtt_port = 18354;
-    char mqttUserName[50] = "cavxjmrm";                              // Логи от сервер
-    char mqttpass[50] = "PNNp5kZaoEXo";                         // Пароль от сервера MQTT
-    char mqttname[50] = "test";                                 // Имя информера
-    char mqttsubinform[50] = "stat/sonoff2/RESULT";             // Сообщение
+    char mqttserver[50] = "m24.cloudmqtt.com";
+    int mqttport = 18354;
+    char mqttUserName[50] = "cavxjmrm";                             // Логи от сервер
+    char mqttid[50] = "fvnrfg";
+    char mqttpass[50] = "PNNp5kZaoEXo";                             // Пароль от сервера MQTT
+    char mqttname2[50] = "sonoff2";                                 // Имя информера
+    char mqttsw21[50] = "Кухня";
+    char mqttsw22[50] = "Ванная";
+    char mqttsw41[50] = "Столовая";
+    char mqttsw42[50] = "Прихожая";
+    char mqttsw43[50] = "Вход";
+    char mqttsw44[50] = "Гараж";
+
+    char mqttname4[50] = "sonoff4";                                 // Имя информера
+    char mqttsubinform[50] = "stat/sonoff2/RESULT";                 // Сообщение
+
 
 
 };

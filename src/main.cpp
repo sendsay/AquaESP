@@ -80,6 +80,7 @@ void beep(boolean beep);                // beep signal
 void callback(char* topic, byte* payload, unsigned int length);     // call back MQTT
 void switchRequestTime();               // request status switches
 void sendSwStatusWeb();                 // web send status switches
+void getSwitches();                     // get swithce data
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -144,9 +145,9 @@ void setup() {
 
     //MQTT
     if (WiFi.status() == WL_CONNECTED) {
-        clientMqtt.setServer(config.mqtt_server, config.mqtt_port);
+        clientMqtt.setServer(config.mqttserver, config.mqttport);
         clientMqtt.setCallback(callback);
-        clientMqtt.connect(config.mqttname, config.mqttUserName, config.mqttpass);
+        clientMqtt.connect(config.mqttid, config.mqttUserName, config.mqttpass);
 
         if (clientMqtt.connected()) {
 
@@ -196,6 +197,7 @@ void setup() {
     server.on("/feedFish", feedFish);
     server.on("/shutOffSignal", shutOffSignal);
     server.on("/getDataSwithes", sendSwStatusWeb);
+    server.on("/switchesMode", getSwitches);
     //WEB
 
     //PINS
@@ -680,7 +682,34 @@ void sendData() {
     json += config.ntpServerName;
 
     //MQTT
-    //TODO: Add MQTT for sonOFF
+    json += "\",\"mqttserver\":\"";
+    json += config.mqttserver;
+    json += "\",\"mqttport\":\"";
+    json += config.mqttport;
+    json += "\",\"mqttUserName\":\"";
+    json += config.mqttUserName;
+    json += "\",\"mqttpass\":\"";
+    json += config.mqttpass;
+    json += "\",\"mqttnaid\":\"";
+    json += config.mqttid;
+    json += "\",\"mqttname2\":\"";
+    json += config.mqttname2;
+    json += "\",\"mqttsw21\":\"";
+    json += config.mqttsw21;
+    json += "\",\"mqttsw22\":\"";
+    json += config.mqttsw22;
+    json += "\",\"mqttname4\":\"";
+    json += config.mqttname4;
+    json += "\",\"mqttsw41\":\"";
+    json += config.mqttsw41;
+    json += "\",\"mqttsw42\":\"";
+    json += config.mqttsw42;
+    json += "\",\"mqttsw43\":\"";
+    json += config.mqttsw43;
+    json += "\",\"mqttsw44\":\"";
+    json += config.mqttsw44;
+
+
 
     //Aqua
     json += "\",\"feedTime\":\"";
@@ -761,7 +790,6 @@ void getSensorsData() {
 
 
     json += "\"}";
-
     server.send (200, "text/json", json);
 }
 
@@ -777,8 +805,23 @@ void shutOffSignal() {
     beepLongDelayTimer.start();
     alarmFlag2 = true;
 
-
     DEBUG("SHUT OFF BUTTON");
+    server.send(200, "text/json", "{\"Response\":\"OK\"}");
+}
+
+void getSwitches() {
+    // char switches;
+    // const char *mode;
+
+    // mode = server.arg("mode").c_str();
+
+    if (server.arg("id").equals("sw21")) {
+        clientMqtt.publish( "cmnd/sonoff2/POWER1", server.arg("mode").c_str());
+    }
+    if (server.arg("id").equals("sw22")) {
+        clientMqtt.publish( "cmnd/sonoff2/POWER2", server.arg("mode").c_str());
+    }
+
     server.send(200, "text/json", "{\"Response\":\"OK\"}");
 }
 
@@ -972,7 +1015,7 @@ void loadConfiguration(const char *filename, Config &config) {
     strlcpy(config.ntpServerName, doc["ntpServerName"] | "ntp3.time.in.ua", sizeof(config.ntpServerName));
 
     //MQTT
-    //TODO: Add MQTT for sonOFF
+
 
     //Aqua
     config.feedTime = doc["feedTime"] | 7;
