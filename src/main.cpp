@@ -822,6 +822,20 @@ void getSwitches() {
         clientMqtt.publish( "cmnd/sonoff2/POWER2", server.arg("mode").c_str());
     }
 
+    if (server.arg("id").equals("sw41")) {
+        clientMqtt.publish( "cmnd/sonoff4/POWER1", server.arg("mode").c_str());
+    }
+    if (server.arg("id").equals("sw42")) {
+        clientMqtt.publish( "cmnd/sonoff4/POWER2", server.arg("mode").c_str());
+    }
+    if (server.arg("id").equals("sw43")) {
+        clientMqtt.publish( "cmnd/sonoff4/POWER3", server.arg("mode").c_str());
+    }
+    if (server.arg("id").equals("sw44")) {
+        clientMqtt.publish( "cmnd/sonoff4/POWER4", server.arg("mode").c_str());
+    }
+
+
     server.send(200, "text/json", "{\"Response\":\"OK\"}");
 }
 
