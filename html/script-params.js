@@ -47,6 +47,7 @@ function getData() {
             document.getElementById("upEdgeTemp").value = json.upEdgeTemp;
             document.getElementById("dnEdgeTemp").value = json.dnEdgeTemp;
 
+            console.log("**********************");
             console.log(str);
         }
     }
@@ -79,9 +80,9 @@ function saveButton() {
 
                     "&mqttport=" + val('mqttport') + "&mqttUserName=" + val('mqttUserName') + "&mqttpass=" + val('mqttpass') +
                     "&mqttid=" + val('mqttid') + "&mqttname2=" + val('mqttname2') + "&mqttswitchname21=" + val('mqttswitchname21') +
-                    "&mqttswitchname22" + val('mqttswitchname22') + "&mqttname4=" + val('mqttname4') +
-                    "&mqttswitchname41" + val('mqttswitchname41') + "&mqttswitchname42" + val('mqttswitchname42') +
-                    "&mqttswitchname43" + val('mqttswitchname43') + "&mqttswitchname44" + val('mqttswitchname44')
+                    "&mqttswitchname22=" + val('mqttswitchname22') + "&mqttname4=" + val('mqttname4') +
+                    "&mqttswitchname41=" + val('mqttswitchname41') + "&mqttswitchname42=" + val('mqttswitchname42') +
+                    "&mqttswitchname43=" + val('mqttswitchname43') + "&mqttswitchname44=" + val('mqttswitchname44')
 
                     ;
     console.log("************* send to server ");

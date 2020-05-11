@@ -690,24 +690,24 @@ void sendData() {
     json += config.mqttUserName;
     json += "\",\"mqttpass\":\"";
     json += config.mqttpass;
-    json += "\",\"mqttnaid\":\"";
+    json += "\",\"mqttid\":\"";
     json += config.mqttid;
     json += "\",\"mqttname2\":\"";
     json += config.mqttname2;
-    json += "\",\"mqttsw21\":\"";
-    json += config.mqttsw21;
-    json += "\",\"mqttsw22\":\"";
-    json += config.mqttsw22;
+    json += "\",\"mqttswitchname21\":\"";
+    json += config.mqttswitchname21;
+    json += "\",\"mqttswitchname22\":\"";
+    json += config.mqttswitchname22;
     json += "\",\"mqttname4\":\"";
     json += config.mqttname4;
-    json += "\",\"mqttsw41\":\"";
-    json += config.mqttsw41;
-    json += "\",\"mqttsw42\":\"";
-    json += config.mqttsw42;
-    json += "\",\"mqttsw43\":\"";
-    json += config.mqttsw43;
-    json += "\",\"mqttsw44\":\"";
-    json += config.mqttsw44;
+    json += "\",\"mqttswitchname41\":\"";
+    json += config.mqttswitchname41;
+    json += "\",\"mqttswitchname42\":\"";
+    json += config.mqttswitchname42;
+    json += "\",\"mqttswitchname43\":\"";
+    json += config.mqttswitchname43;
+    json += "\",\"mqttswitchname44\":\"";
+    json += config.mqttswitchname44;
 
 
 
@@ -759,8 +759,23 @@ void sendData() {
     config.upEdgeTemp = server.arg("upEdgeTemp").toInt();
     config.dnEdgeTemp = server.arg("dnEdgeTemp").toInt();
 
-    // server.send(200, "text/json", "{\"Response\":\"OK\"}");
+    server.arg("mqttserver").toCharArray(config.mqttserver, 50);
+    config.mqttport = server.arg("mqttport").toInt();
+    server.arg("mqttUserName").toCharArray(config.mqttUserName, 50);
+    server.arg("mqttpass").toCharArray(config.mqttpass, 50);
+    server.arg("mqttid").toCharArray(config.mqttid, 50);
+    server.arg("mqttname2").toCharArray(config.mqttname2, 50);
+    server.arg("mqttswitchname21").toCharArray(config.mqttswitchname21, 50);
+    server.arg("mqttswitchname22").toCharArray(config.mqttswitchname22, 50);
+    server.arg("mqttname4").toCharArray(config.mqttname4, 50);
+    server.arg("mqttswitchname41").toCharArray(config.mqttswitchname41, 50);
+    server.arg("mqttswitchname42").toCharArray(config.mqttswitchname42, 50);
+    server.arg("mqttswitchname43").toCharArray(config.mqttswitchname43, 50);
+    server.arg("mqttswitchname44").toCharArray(config.mqttswitchname44, 50);
 
+
+
+    // server.send(200, "text/json", "{\"Result\":\"OK\"}");
     saveConfig(fileConfigName, config);
 
 
@@ -810,10 +825,6 @@ void shutOffSignal() {
 }
 
 void getSwitches() {
-    // char switches;
-    // const char *mode;
-
-    // mode = server.arg("mode").c_str();
 
     if (server.arg("id").equals("sw21")) {
         clientMqtt.publish( "cmnd/sonoff2/POWER1", server.arg("mode").c_str());
@@ -822,7 +833,7 @@ void getSwitches() {
         clientMqtt.publish( "cmnd/sonoff2/POWER2", server.arg("mode").c_str());
     }
 
-    server.send(200, "text/json", "{\"Response\":\"OK\"}");
+    // server.send(200, "text/json", "{\"Response\":\"OK\"}");
 }
 
 /*
@@ -988,7 +999,7 @@ void loadConfiguration(const char *filename, Config &config) {
     File file = SPIFFS.open("/config.txt", "r");
 
 
-    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
+    const size_t capacity = JSON_OBJECT_SIZE(26) + 1200;
     DynamicJsonDocument doc(capacity);
 
     DeserializationError error = deserializeJson(doc, file);
@@ -1026,6 +1037,23 @@ void loadConfiguration(const char *filename, Config &config) {
     config.dnEdgeTemp = doc["dnEdgeTemp"] | 20;
 
 
+
+    strlcpy(config.mqttserver, doc["mqttserver"] | "m24.cloudmqtt.com", sizeof(config.mqttserver));
+    config.mqttport = doc["mqttport"] | 18654;
+    strlcpy(config.mqttUserName, doc["mqttUserName"] | "vrE5bb", sizeof(config.mqttUserName));
+    strlcpy(config.mqttpass, doc["mqttpass"] | "vfnKkvfo", sizeof(config.mqttpass));
+    strlcpy(config.mqttid, doc["mqttid"] | "MyHome", sizeof(config.mqttid));
+    strlcpy(config.mqttname2, doc["mqttname2"] | "MyHome", sizeof(config.mqttname2));
+    strlcpy(config.mqttswitchname21, doc["mqttswitchname21"] | "MyHome", sizeof(config.mqttswitchname21));
+    strlcpy(config.mqttswitchname22, doc["mqttswitchname22"] | "MyHome", sizeof(config.mqttswitchname22));
+    strlcpy(config.mqttname4, doc["mqttname4"] | "MyHome", sizeof(config.mqttname4));
+    strlcpy(config.mqttswitchname41, doc["mqttswitchname41"] | "MyHome", sizeof(config.mqttswitchname41));
+    strlcpy(config.mqttswitchname42, doc["mqttswitchname42"] | "MyHome", sizeof(config.mqttswitchname42));
+    strlcpy(config.mqttswitchname43, doc["mqttswitchname43"] | "MyHome", sizeof(config.mqttswitchname43));
+    strlcpy(config.mqttswitchname44, doc["mqttswitchname44"] | "MyHome", sizeof(config.mqttswitchname44));
+
+
+
     // TODO: Add all parameters for loading
 
 
@@ -1057,7 +1085,7 @@ void saveConfig(const char *filename, Config &config) {
         return;
     }
 
-    const size_t capacity = JSON_OBJECT_SIZE(26) + 720;
+    const size_t capacity = JSON_OBJECT_SIZE(26) + 1200;
     DynamicJsonDocument doc(capacity);
 
     doc["ssid"] = config.ssid;
@@ -1073,6 +1101,20 @@ void saveConfig(const char *filename, Config &config) {
     doc["dnEdgePh"] = config.dnEdgePh;
     doc["upEdgeTemp"] = config.upEdgeTemp;
     doc["dnEdgeTemp"] = config.dnEdgeTemp;
+    doc["mqttserver"] = config.mqttserver;
+    doc["mqttport"] = config.mqttport;
+    doc["mqttUserName"] = config.mqttUserName;
+    doc["mqttpass"] = config.mqttpass;
+    doc["mqttid"] = config.mqttid;
+    doc["mqttname2"] = config.mqttname2;
+    doc["mqttswitchname21"] = config.mqttswitchname21;
+    doc["mqttswitchname22"] = config.mqttswitchname22;
+    doc["mqttname4"] = config.mqttname4;
+    doc["mqttswitchname41"] = config.mqttswitchname41;
+    doc["mqttswitchname42"] = config.mqttswitchname42;
+    doc["mqttswitchname43"] = config.mqttswitchname43;
+    doc["mqttswitchname44"] = config.mqttswitchname44;
+
 
     //TODO: Add all params for saving
 

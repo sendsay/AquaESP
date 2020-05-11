@@ -68,14 +68,15 @@ struct Config {
     char mqttid[50] = "fvnrfg";
     char mqttpass[50] = "PNNp5kZaoEXo";                             // Пароль от сервера MQTT
     char mqttname2[50] = "sonoff2";                                 // Имя информера
-    char mqttsw21[50] = "Кухня";
-    char mqttsw22[50] = "Ванная";
-    char mqttsw41[50] = "Столовая";
-    char mqttsw42[50] = "Прихожая";
-    char mqttsw43[50] = "Вход";
-    char mqttsw44[50] = "Гараж";
+    char mqttswitchname21[50] = "Кухня";
+    char mqttswitchname22[50] = "Ванная";
+    char mqttname4[50] = "sonoff4";
+    char mqttswitchname41[50] = "Столовая";
+    char mqttswitchname42[50] = "Прихожая";
+    char mqttswitchname43[50] = "Вход";
+    char mqttswitchname44[50] = "Гараж";
 
-    char mqttname4[50] = "sonoff4";                                 // Имя информера
+                                                                     // Имя информера
     char mqttsubinform[50] = "stat/sonoff2/RESULT";                 // Сообщение
 
 
