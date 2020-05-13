@@ -81,6 +81,7 @@ void callback(char* topic, byte* payload, unsigned int length);     // call back
 void switchRequestTime();               // request status switches
 void sendSwStatusWeb();                 // web send status switches
 void getSwitches();                     // get swithce data
+void getSwitchesNames();                // get switches names
 
 /*
 ..#######..########........##.########..######..########..######.
@@ -198,6 +199,7 @@ void setup() {
     server.on("/shutOffSignal", shutOffSignal);
     server.on("/getDataSwithes", sendSwStatusWeb);
     server.on("/switchesMode", getSwitches);
+    server.on("/getSwitchesNames", getSwitchesNames);
     //WEB
 
     //PINS
@@ -658,6 +660,29 @@ void script_params() {
 void script_light() {
     File file = SPIFFS.open("/script-light.js.gz", "r");
     size_t sent = server.streamFile(file, "application/javascript");
+}
+
+void getSwitchesNames() {
+    String json = "{";
+    //wifi
+    json += "\"switchname21\":\"";
+    json += config.mqttswitchname21;   
+    json += "\",\"switchname22\":\"";
+    json += config.mqttswitchname22;   
+    json += "\",\"switchname41\":\"";
+    json += config.mqttswitchname41;   
+    json += "\",\"switchname42\":\"";
+    json += config.mqttswitchname42;   
+    json += "\",\"switchname43\":\"";
+    json += config.mqttswitchname43;   
+    json += "\",\"switchname44\":\"";
+    json += config.mqttswitchname44;   
+
+    json += "\"}";
+
+    server.send (200, "text/json", json);
+    DEBUG("****send switches names");
+    DEBUG(json); 
 }
 
 void sendData() {

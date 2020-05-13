@@ -8,7 +8,10 @@ body { display: flex;
     align-items: center;
     min-height: 100vh;
     flex-wrap: wrap;
-    background: #010615;}
+    background: #010615;
+    color:white;
+    text-align: right;
+}
 
 input[type="checkbox"] {
     position: relative;

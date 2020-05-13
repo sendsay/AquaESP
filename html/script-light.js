@@ -27,6 +27,30 @@ function clickSw(id) {
     xmlHttp.send();
 }
 
+function onLoad() {
+    if(xmlHttp.readyState==0 || xmlHttp.readyState==4){
+        xmlHttp.open('GET','/getSwitchesNames', true);
+        xmlHttp.send();
+        xmlHttp.onload = function(e) {
+
+            var str = xmlHttp.responseText;
+
+            json=JSON.parse(str);
+
+            console.log(str);
+
+            document.getElementById("switchname21").innerHTML = json.switchname21;
+            document.getElementById("switchname22").innerHTML = json.switchname22;
+            document.getElementById("switchname41").innerHTML = json.switchname41;
+            document.getElementById("switchname42").innerHTML = json.switchname42;
+            document.getElementById("switchname43").innerHTML = json.switchname43;
+            document.getElementById("switchname44").innerHTML = json.switchname44;
+        }
+    }
+
+    getSwitches();  //get switches data
+}
+
 function getSwitches() {
     if(xmlHttp.readyState==0 || xmlHttp.readyState==4){
         xmlHttp.open('GET','/getDataSwithes',true);
