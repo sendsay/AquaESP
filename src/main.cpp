@@ -190,6 +190,13 @@ void setup() {
     server.on("/script-params.js", script_params);
     server.on("script-light.js", script_light);
     server.on("/script-light.js", script_light);
+    server.on("/bootstrap.min.css", bootstrap);
+    server.on("bootstrap.min.css", bootstrap);
+    server.on("/bootstrap.min.js", bootstrapmin);
+    server.on("bootstrap.min.js", bootstrapmin);
+    server.on("jquery.min.js", jquery);
+    server.on("/jquery.min.js", jquery);
+
 
     server.on("/getData", sendData);
     server.on("/saveContent", saveContent);
@@ -666,23 +673,23 @@ void getSwitchesNames() {
     String json = "{";
     //wifi
     json += "\"switchname21\":\"";
-    json += config.mqttswitchname21;   
+    json += config.mqttswitchname21;
     json += "\",\"switchname22\":\"";
-    json += config.mqttswitchname22;   
+    json += config.mqttswitchname22;
     json += "\",\"switchname41\":\"";
-    json += config.mqttswitchname41;   
+    json += config.mqttswitchname41;
     json += "\",\"switchname42\":\"";
-    json += config.mqttswitchname42;   
+    json += config.mqttswitchname42;
     json += "\",\"switchname43\":\"";
-    json += config.mqttswitchname43;   
+    json += config.mqttswitchname43;
     json += "\",\"switchname44\":\"";
-    json += config.mqttswitchname44;   
+    json += config.mqttswitchname44;
 
     json += "\"}";
 
     server.send (200, "text/json", json);
     DEBUG("****send switches names");
-    DEBUG(json); 
+    DEBUG(json);
 }
 
 void sendData() {
@@ -802,8 +809,21 @@ void sendData() {
 
     // server.send(200, "text/json", "{\"Result\":\"OK\"}");
     saveConfig(fileConfigName, config);
+}
 
+void bootstrap() {
+    File file = SPIFFS.open("/bootstrap.min.css.gz", "r");
+    size_t sent = server.streamFile(file, "text/css");
+}
 
+void bootstrapmin() {
+    File file = SPIFFS.open("/bootstrap.min.js.gz", "r");
+    size_t sent = server.streamFile(file, "application/javascript");
+}
+
+void jquery() {
+    File file = SPIFFS.open("/jquery.min.js.gz", "r");
+    size_t sent = server.streamFile(file, "application/javascript");
 }
 
 void restart() {
