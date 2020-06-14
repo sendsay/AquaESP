@@ -30,6 +30,7 @@
 #include <OneWire.h>
 #include <DallasTemperature.h>
 #include <PubSubClient.h>
+#include <Wire.h>
 
 #include <main.h>
 
@@ -57,6 +58,9 @@ void parampng();                        // web param png
 void script();                          // web script js
 void script_params();                   // web script  param js
 void script_light();                    // web script  light js
+void bootstrap();                       // web bootstrap
+void bootstrapmin();                    // web bootstrapmin
+void jquery();                          // web jquery
 void printTime();                       // print time for debug
 void timeUpdateNTP();                   // update time from iNet
 void getNTPtime();                      // get time from server
@@ -108,6 +112,7 @@ Ticker switchRequestTimer(switchRequestTime, 60000);
 WiFiClient ClientMqtt;                  //Wifi client for MQTT
 PubSubClient clientMqtt(ClientMqtt);    // MQTT client
 SwitchesMQTT switchMqtt;                // mqtt switches
+
 
 /*
 ..######..########.########.##.....##.########.
