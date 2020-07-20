@@ -11,10 +11,10 @@
 #define DEBUG(x)
 #endif
 
-#define PIN_FEEDING D2                      // Pin motor feeding
+#define PIN_FEEDING D4                      // Pin motor feeding
 #define PIN_FEEDLIMIT D0                    // Pin feed mechanism limit
 #define PIN_BEEPER D5                       // Pin buzzer
-#define ONE_WIRE_BUS D1                     // Aqua temp port adress
+#define ONE_WIRE_BUS D3                     // Aqua temp port adress
 #define PIN_WATERLOW D7                     // Water low
 
 boolean firstStart = false;                 // Первый старт

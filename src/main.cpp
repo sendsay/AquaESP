@@ -3,11 +3,11 @@
 // Shpakov Vladyslav aka SendSay            //
 // 18.04.2020                               //
 //                                          //
-// Fish feeding = D2                        //
-// Feeder limit = D0                        //
-// Beeper       = D5                        //
-// Ph meter     = D1                        //
-// Water level  = D7                        //
+// Fish feeding = D4 -> 13                  //
+// Feeder limit = D0 -> A2                  //
+// Beeper       = D5 -> 5                   //
+// Temp         = D3 -> 12                  //
+// Water level  = D7 -> 7                   //
 //                                          //
 // 5v for OpenAquarium      = VU            //
 // 3.3v for Open Aquarium   = 3.3v          //
@@ -340,6 +340,8 @@ void loop() {
     default:
         break;
     }
+
+
 
 
     // GET SENSORS
