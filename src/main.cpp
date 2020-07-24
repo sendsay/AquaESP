@@ -31,6 +31,7 @@
 #include <DallasTemperature.h>
 #include <PubSubClient.h>
 #include <Wire.h>
+#include <Adafruit_ADS1015.h>
 
 #include <main.h>
 
@@ -112,6 +113,7 @@ Ticker switchRequestTimer(switchRequestTime, 60000);
 WiFiClient ClientMqtt;                  //Wifi client for MQTT
 PubSubClient clientMqtt(ClientMqtt);    // MQTT client
 SwitchesMQTT switchMqtt;                // mqtt switches
+Adafruit_ADS1115 ads(0x48);             //Здесь указываем адрес устройства (указан по умолчаних 0х48)
 
 
 /*
@@ -128,9 +130,25 @@ void setup() {
         Serial.begin(57600);
     #endif
 
+    //PINS
+    pinMode(PIN_FEEDING, OUTPUT);               // Motor feeder
+    digitalWrite(PIN_FEEDING, LOW);             // Motor Off
+    pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
+    pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
+
+    pinMode(D6, OUTPUT);
+    digitalWrite(D6, HIGH);
+
+    //PINS
+
     //FS
     SPIFFS.begin();
     //FS
+
+    //ADS
+    ads.begin();
+    //ADS
+
 
     DEBUG("");
     DEBUG("START >>>");
@@ -213,12 +231,6 @@ void setup() {
     server.on("/switchesMode", getSwitches);
     server.on("/getSwitchesNames", getSwitchesNames);
     //WEB
-
-    //PINS
-    pinMode(PIN_FEEDING, OUTPUT);               // Motor feeder
-    pinMode(PIN_FEEDLIMIT, INPUT);              // Feeder limit
-    pinMode(PIN_BEEPER, OUTPUT);                // Buzzer
-    //PINS
 
     sensors.begin();                            // start aqua temp probe
 
@@ -352,13 +364,30 @@ void loop() {
         waterTemp = sensors.getTempCByIndex(0);
 
         //Ph
-        pHArray[pHArrayIndex++] = analogRead(A0);
+        int16_t adc0;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
+        adc0 = ads.readADC_SingleEnded(0);          //Измеряем напряжение
+        pHArray[pHArrayIndex++] = adc0 / 10;
         if(pHArrayIndex == 40) pHArrayIndex = 0;
-        voltage = avergearray(pHArray, 40) * 3.3 / 1024;
+        voltage = avergearray(pHArray, 40) * 5 / 1024;
         pHValue = 3.5 * voltage + config.offsetPh;
 
 
         //TDS
+        // считываем данные с датчика влажности почвы
+        // int16_t adc1;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
+        // adc1 = ads.readADC_SingleEnded(3);          //Измеряем напряжение
+
+        // DEBUG(adc1);
+
+        // считываем данные с датчика влажности почвы
+        int valueSensor = analogRead(A0);
+        // переводим данные с датчика в напряжение
+        float voltageSensor = valueSensor * 3.3 / 1024.0;
+        // конвертируем напряжение в концентрацию
+        float tdsSensor = (633.42 * pow(voltageSensor, 3) - 255.86 * pow(voltageSensor, 2) + 857.39 * voltageSensor) * 0.5;
+        
+        DEBUG(valueSensor);
+        DEBUG(tdsSensor);
 
     }
 
