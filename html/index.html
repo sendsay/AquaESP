@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -5,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"> -->
     <!-- jQuery library -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <!-- Popper JS -->
@@ -13,44 +14,77 @@
     <!-- Latest compiled JavaScript -->
     <!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script> -->
 
-    <link rel="stylesheet" href="style.css">
+    <!-- <link rel="stylesheet" href="resources/styles/style.css"> -->
+    <link rel="stylesheet" href="style-aqua.css">
 
-    <title>Aquaroom 1.0</title>
+    <title>Aquarium control</title>
 </head>
 <body>
-    <div class="box" onClick="window.location='aqua.html'">
-      <div class="glass"></div>
-        <div class="content">
-          <div class="row">
-            <img class="center col" src="aqua.png" alt="Aqurium">
-          </div>
-          <h2>Аквариум</h2>
-          <p>Мониторинг и управление аквариумом</p>
+    <div class="page">
+
+       <a href="#" class="btn btnSignalOff signalOff" id="signalOff" onclick="shutOffSignal()">Выключить</a>
+
+        <div class="row msg center waterLow">
+            <div class="col">
+                <h2>Проверьте уровнь воды!</h2>
+            </div>
         </div>
+
+        <div class="maincontent">
+            <div class="box temp">
+                <div class="glass"></div>
+                <div class="content">
+                    <div class="percent">
+                        <svg>
+                            <circle cx="70" cy="70" r="70"></circle>
+                            <circle cx="70" cy="70" r="70"></circle>
+                        </svg>
+                        <div class="number">
+                            <h2 id="temp">0<span>°C</span></h2>
+                        </div>
+                    </div>
+                    <h3 class="text">Температура</h3>
+                </div>
+            </div>
+
+            <div class="box ph">
+                <div class="glass"></div>
+                <div class="content">
+                    <div class="percent">
+                        <svg>
+                            <circle cx="70" cy="70" r="70"></circle>
+                            <circle cx="70" cy="70" r="70"></circle>
+                        </svg>
+                        <div class="number">
+                            <h2 id="pH">0<span>pH</span></h2>
+                        </div>
+                    </div>
+                    <h3 class="text">Кислотность</h3>
+                </div>
+            </div>
+
+            <div class="box tds">
+                <div class="glass"></div>
+                <div class="content">
+                    <div class="percent">
+                        <svg>
+                            <circle cx="70" cy="70" r="70"></circle>
+                            <circle cx="70" cy="70" r="70"></circle>
+                        </svg>
+                        <div class="number">
+                            <h2 id="tds">0<span>µS</span></h2>
+                        </div>
+                    </div>
+                    <h3 class="text">Минерализация</h3>
+                </div>
+            </div>
+        </div>
+
+        <a href="#" class="btn" onclick="feedButton()">Кормить</a>
+        <a href="#" class="btn" onClick="window.location='params.html'">Настройки</a>
     </div>
 
-    <div class="box" onClick="window.location='light.html'">
-      <div class="glass"></div>
-        <div class="content">
-          <div class="row">
-            <img class="center col" src="light.png" alt="Light">
-          </div>
-          <h2>Свет</h2>
-          <p>Управление освещением</p>
-        </div>
-    </div>
+    <script type="text/javascript" src="script.js"></script>
 
-    <div class="box" onClick="window.location='params.html'">
-      <div class="glass"></div>
-        <div class="content">
-          <div class="row">
-            <img class="center col" src="params.png" alt="Parameters">
-          </div>
-          <h2>Настройка</h2>
-          <p>Настройка параметров</p>
-        </div>
-    </div>
-
-    <!-- <script src="script.js"></script> -->
 </body>
 </html>

@@ -122,6 +122,7 @@ int pHArray[40];   //Store the average value of the sensor feedback
 int pHArrayIndex=0;
 static float pHValue, voltage;
 float Offset = 0;         //deviation compensate
+int tdsSensor = 0;    //TDS sensor data
 
 byte alarmCode = 0;       // alarm code to send on page
 boolean alarmFlag = false;  // alarm flag

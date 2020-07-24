@@ -90,11 +90,15 @@ function getSensorsData() {
 
             // pH
             pHValue = json.pHValue;
-            calc = (440 - (440 * pHValue) / 10);
+            calc = (440 - (440 * pHValue) / 30);
             $(".box:nth-child(2) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("pH").innerHTML = pHValue + "<span> pH</span>";
 
-            // EDC
+            // TDS
+            TDSValue = json.TDSValue;
+            calc = (440 - (440 * TDSValue) / 6000);
+            $(".box:nth-child(3) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
+            document.getElementById("tds").innerHTML = TDSValue + "<span> µS</span>";
 
 
             // ALARMS
@@ -152,11 +156,4 @@ function shutOffSignal() {
 .##.......##..####.##.....##
 .##.......##...###.##.....##
 .########.##....##.########.
-
-
-
-
-
-
-
 */

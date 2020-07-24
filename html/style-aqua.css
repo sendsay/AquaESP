@@ -155,7 +155,7 @@ svg circle:nth-child(2) {
 }
 
 .box:nth-child(3) svg circle:nth-child(2) {
-    stroke-dashoffset: calc(440 - (440 * 0) / 1200);
+    stroke-dashoffset: calc(440 - (440 * 0) / 3000);
     stroke: #0414fd;
 }
 
@@ -178,6 +178,7 @@ svg circle:nth-child(2) {
     transition: .3s;
     z-index: 2;
     font-weight: 700;
+    margin-bottom: 20px;
 }
 
 .btn:before {

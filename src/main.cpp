@@ -33,6 +33,7 @@
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
 
+
 #include <main.h>
 
 /*
@@ -374,20 +375,23 @@ void loop() {
 
         //TDS
         // считываем данные с датчика влажности почвы
-        // int16_t adc1;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
-        // adc1 = ads.readADC_SingleEnded(3);          //Измеряем напряжение
+        int16_t adc1;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
+        adc1 = ads.readADC_SingleEnded(3);          //Измеряем напряжение
 
         // DEBUG(adc1);
 
-        // считываем данные с датчика влажности почвы
-        int valueSensor = analogRead(A0);
+        // // считываем данные с датчика влажности почвы
+        int valueSensor = adc1; //analogRead(A0);
         // переводим данные с датчика в напряжение
-        float voltageSensor = valueSensor * 3.3 / 1024.0;
+        float voltageSensor = valueSensor * 3.3/ 4096.0;
         // конвертируем напряжение в концентрацию
-        float tdsSensor = (633.42 * pow(voltageSensor, 3) - 255.86 * pow(voltageSensor, 2) + 857.39 * voltageSensor) * 0.5;
+        tdsSensor = (133.42 * pow(voltageSensor, 3) - 255.86 * pow(voltageSensor, 2) + 857.39 * voltageSensor) * 0.5;
         
-        DEBUG(valueSensor);
-        DEBUG(tdsSensor);
+        // DEBUG(valueSensor);
+        // DEBUG(tdsSensor);
+
+
+
 
     }
 
@@ -880,9 +884,9 @@ void getSensorsData() {
     //pH
     json += "\",\"pHValue\":\"";
     json += pHValue;
-
     //TDS
-
+    json += "\",\"TDSValue\":\"";
+    json += tdsSensor;
 
 
     json += "\"}";

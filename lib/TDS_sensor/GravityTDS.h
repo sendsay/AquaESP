@@ -19,10 +19,8 @@
 
 #include "Arduino.h"
 
-#define ReceivedBufferLength 50
+#define ReceivedBufferLength 15
 #define TdsFactor 0.5  // tds = ec / 2
-
-enum {NO_MODE, CALIBRATE_START, CALIBRATE_DATA_SET, CALIBRATE_END};
 
 class GravityTDS
 {
@@ -37,12 +35,9 @@ public:
     void setAref(float value);  //reference voltage on ADC, default 5.0V on Arduino UNO
     void setAdcRange(float range);  //1024 for 10bit ADC;4096 for 12bit ADC
     void setKvalueAddress(int address); //set the EEPROM address to store the k value,default address:0x08
-    void runMode(byte mode);             // set work mode       
     float getKvalue(); 
     float getTdsValue();
     float getEcValue();
-    void setCalData(int data); // set caluration data
-
 
 private:
     int pin;
@@ -59,9 +54,6 @@ private:
     float ecValue; //before temperature compensation
     float ecValue25; //after temperature compensation
     float tdsValue;
-    int calibData = 0;   //set calibration data
- 
-    byte workMode = 0;   //work mode
 
     void readKValues();
     boolean cmdSerialDataAvailable();
