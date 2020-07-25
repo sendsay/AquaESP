@@ -96,7 +96,7 @@ function getSensorsData() {
 
             // TDS
             TDSValue = json.TDSValue;
-            calc = (440 - (440 * TDSValue) / 6000);
+            calc = (440 - (440 * TDSValue) / 1500);
             $(".box:nth-child(3) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("tds").innerHTML = TDSValue + "<span> ppm</span>";
 

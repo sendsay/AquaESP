@@ -46,6 +46,8 @@ function getData() {
             document.getElementById("dnEdgePh").value = json.dnEdgePh;
             document.getElementById("upEdgeTemp").value = json.upEdgeTemp;
             document.getElementById("dnEdgeTemp").value = json.dnEdgeTemp;
+            document.getElementById("upEdgeTDS").value = json.upEdgeTDS;
+            document.getElementById("dnEdgeTDS").value = json.dnEdgeTDS;
 
             console.log("**********************");
             console.log(str);
@@ -76,8 +78,8 @@ function saveButton() {
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
                     "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') +
                     "&offsetPh=" + val('offsetPh') + "&upEdgePh=" + val('upEdgePh') + "&dnEdgePh=" + val('dnEdgePh') +
-                    "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp') + "&upEdgeTDS" + val('upEdgeTDS')
-                    + "&dnEdgeTDS" + val('dnEdgeTDS')
+                    "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp') + "&upEdgeTDS=" + val('upEdgeTDS')
+                    + "&dnEdgeTDS=" + val('dnEdgeTDS')
                     //  + "&mqttserver=" + val("mqttserver") +
 
                     // "&mqttport=" + val('mqttport') + "&mqttUserName=" + val('mqttUserName') + "&mqttpass=" + val('mqttpass') +
