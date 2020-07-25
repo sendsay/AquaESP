@@ -32,6 +32,7 @@
 #include <PubSubClient.h>
 #include <Wire.h>
 #include <Adafruit_ADS1015.h>
+// #include <GravityTDS.h>
 
 
 #include <main.h>
@@ -359,7 +360,7 @@ void loop() {
 
     // GET SENSORS
     // if ((second % 1 == 0) and (secFr == 0)) {
-    if (secFr == 0) {
+    if (second % 2 == 0) {
         // water temp
         sensors.requestTemperatures();
         waterTemp = sensors.getTempCByIndex(0);
@@ -367,31 +368,22 @@ void loop() {
         //Ph
         int16_t adc0;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
         adc0 = ads.readADC_SingleEnded(0);          //Измеряем напряжение
-        pHArray[pHArrayIndex++] = adc0 / 10;
+        pHArray[pHArrayIndex++] = adc0;
         if(pHArrayIndex == 40) pHArrayIndex = 0;
-        voltage = avergearray(pHArray, 40) * 5 / 1024;
-        pHValue = 3.5 * voltage + config.offsetPh;
+        voltage = avergearray(pHArray, 40) * 3.3 / 4096;
+        pHValue = voltage + config.offsetPh;
 
 
         //TDS
-        // считываем данные с датчика влажности почвы
         int16_t adc1;                               // на выходе преобразования АЦП мы получаем 16-разрядное знаковое целое
         adc1 = ads.readADC_SingleEnded(3);          //Измеряем напряжение
 
-        // DEBUG(adc1);
+        int valueSensor = adc1;                     //analogRead(A0);
+        float voltageSensor = valueSensor * 3.3 / 4096.0; //10bit 1024; 12bit 4096 
 
-        // // считываем данные с датчика влажности почвы
-        int valueSensor = adc1; //analogRead(A0);
-        // переводим данные с датчика в напряжение
-        float voltageSensor = valueSensor * 3.3/ 4096.0;
-        // конвертируем напряжение в концентрацию
-        tdsSensor = (133.42 * pow(voltageSensor, 3) - 255.86 * pow(voltageSensor, 2) + 857.39 * voltageSensor) * 0.5;
-        
-        // DEBUG(valueSensor);
-        // DEBUG(tdsSensor);
-
-
-
+        ecValue25  = voltageSensor / (1.0+0.02*(waterTemp-25.0));  //temperature compensation        
+        tdsSensor = (133.42 * pow(ecValue25, 3) - 255.86 * pow(ecValue25, 2) + 857.39 * ecValue25);  
+        tdsSensor =  (tdsSensor * 0.11);
 
     }
 

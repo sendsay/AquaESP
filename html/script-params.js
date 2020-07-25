@@ -76,7 +76,8 @@ function saveButton() {
                     "&passwordAP=" + val('passwordAP') + "&timezone=" + val('timezone') + "&summertime=" + val_sw('summerTime') +
                     "&sigOn=" +"&ntpServerName=" + val('ntpServerName') + "&feedTime=" + val('feedTime') +
                     "&offsetPh=" + val('offsetPh') + "&upEdgePh=" + val('upEdgePh') + "&dnEdgePh=" + val('dnEdgePh') +
-                    "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp')
+                    "&upEdgeTemp=" + val('upEdgeTemp') + "&dnEdgeTemp=" + val('dnEdgeTemp') + "&upEdgeTDS" + val('upEdgeTDS')
+                    + "&dnEdgeTDS" + val('dnEdgeTDS')
                     //  + "&mqttserver=" + val("mqttserver") +
 
                     // "&mqttport=" + val('mqttport') + "&mqttUserName=" + val('mqttUserName') + "&mqttpass=" + val('mqttpass') +
