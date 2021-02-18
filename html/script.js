@@ -84,19 +84,19 @@ function getSensorsData() {
 
             // temperature
             temp = json.temp;
-            calc = (440 - (440 * temp) / 30);
+            calc = (440 - (440 * temp) / 35);
             $(".box:nth-child(1) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("temp").innerHTML = temp + "<span> °C</span>";
 
             // pH
             pHValue = json.pHValue;
-            calc = (440 - (440 * pHValue) / 30);
+            calc = (440 - (440 * pHValue) / 10);
             $(".box:nth-child(2) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("pH").innerHTML = pHValue + "<span> pH</span>";
 
             // TDS
             TDSValue = json.TDSValue;
-            calc = (440 - (440 * TDSValue) / 1500);
+            calc = (440 - (440 * TDSValue) / 1200);
             $(".box:nth-child(3) svg circle:nth-child(2)").css("stroke-dashoffset", calc);
             document.getElementById("tds").innerHTML = TDSValue + "<span> ppm</span>";
 
